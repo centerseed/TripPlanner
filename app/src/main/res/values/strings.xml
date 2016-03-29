@@ -10,7 +10,13 @@
 
     <string name="action_edit">編輯</string>
     <string name="action_delete">刪除</string>
+    <string name="action_done">完成</string>
+
     <string name="title_day">日程</string>
     <string name="title_attraction">景點</string>
     <string name="title_memo">備忘</string>
+    <string name="title_target">目的地</string>
+    <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛?</string>
+    <string name="title_go_time">出發時間</string>
+    <string name="title_back_time">回程時間</string>
 </resources>
