@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_trip_provider">Trips</string>
+
+    <string name="auth_provider_stock" translatable="false">com.barry.tripplanner.provider.TripProvider</string>
+</resources>
