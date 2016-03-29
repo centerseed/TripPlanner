@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.barry.tripplanner.widget;
+package com.barry.tripplanner.trip;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
+import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.utils.DrawableUtils;
 import com.barry.tripplanner.utils.ViewUtils;
@@ -37,20 +38,14 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemConstant
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
-public class DragTripAdapter
-        extends AbstractRecyclerCursorAdapter<DragTripAdapter.MyViewHolder>
-        implements DraggableItemAdapter<DragTripAdapter.MyViewHolder> {
+public class DragDayAdapter
+        extends AbstractRecyclerCursorAdapter<DragDayAdapter.MyViewHolder>
+        implements DraggableItemAdapter<DragDayAdapter.MyViewHolder> {
 
-    private static final String TAG = "MyDraggableItemAdapter";
-    static DragCallback mCallback;
+    private static final String TAG = "DragDayAdapter";
+    static DragListCallback mCallback;
 
-    public interface DragCallback {
-        void onMoveItem(int fromPos, int toPos);
-
-        void onItemClick(Cursor cursor);
-    }
-
-    public DragTripAdapter(Context context, Cursor c, DragCallback callback) {
+    public DragDayAdapter(Context context, Cursor c, DragListCallback callback) {
         super(context, c);
         mCallback = callback;
         setHasStableIds(true);
@@ -59,14 +54,15 @@ public class DragTripAdapter
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        final View v = inflater.inflate((viewType == 0) ? R.layout.list_item_draggable : R.layout.list_item2_draggable, parent, false);
+        final View v = inflater.inflate(R.layout.card_drag_day, parent, false);
         return new MyViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final Cursor cursor) {
         MyViewHolder holder = (MyViewHolder) viewHolder;
-        holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
+        holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_SORT_ID)));
+        holder.mHighLight.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_DAY_HIGHLIGHT)));
 
         // set background resource (target view ID: container)
         final int dragState = holder.getDragStateFlags();
@@ -97,15 +93,12 @@ public class DragTripAdapter
             return;
         }
 
-        // TODO: mProvider.moveItem(fromPosition, toPosition);
         if (mCallback != null) mCallback.onMoveItem(fromPosition, toPosition);
-
         notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
     public boolean onCheckCanStartDrag(MyViewHolder holder, int position, int x, int y) {
-        // x, y --- relative from the itemView's top-left
         final View containerView = holder.mContainer;
         final View dragHandleView = holder.mDragHandle;
 
@@ -129,12 +122,14 @@ public class DragTripAdapter
         public FrameLayout mContainer;
         public View mDragHandle;
         public TextView mTextView;
+        public TextView mHighLight;
 
         public MyViewHolder(View v) {
             super(v);
             mContainer = (FrameLayout) v.findViewById(R.id.container);
             mDragHandle = v.findViewById(R.id.drag_handle);
-            mTextView = (TextView) v.findViewById(android.R.id.text1);
+            mTextView = (TextView) v.findViewById(R.id.day);
+            mHighLight = (TextView) v.findViewById(R.id.highlight);
 
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override

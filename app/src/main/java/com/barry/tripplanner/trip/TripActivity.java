@@ -116,6 +116,13 @@ public class TripActivity extends ToolbarActivity {
 
         @Override
         public Fragment getItem(int position) {
+            if (position == 0) {
+                Fragment f = new DayListFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt(ARG_TRIP_ID, getTripId());
+                f.setArguments(bundle);
+                return f;
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 

@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.SortPair;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.widget.DragTripAdapter;
+import com.barry.tripplanner.trip.DragTripAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
@@ -27,7 +27,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 
 import java.util.ArrayList;
 
-abstract public class DragRecycleListFragment extends ContentFragment implements DragTripAdapter.DragCallback {
+abstract public class DragRecycleListFragment extends ContentFragment implements DragListCallback {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private AbstractRecyclerCursorAdapter mAdapter;
@@ -38,7 +38,7 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recycler_list_view, container, false);
+        return inflater.inflate(R.layout.recycleview, container, false);
     }
 
     @Override
@@ -46,7 +46,7 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
         super.onViewCreated(view, savedInstanceState);
 
         //noinspection ConstantConditions
-        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recycleView);
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         // drag & drop manager
@@ -109,7 +109,16 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
             c.moveToNext();
         }
     }
-    protected void resetSortIdMap() {
+    protected void resetSortIdMap(int fromPos, int toPos) {
+        SortPair currpair = mSortIDMap.get(fromPos);
+        if (fromPos < toPos) {
+            mSortIDMap.add(++toPos, currpair);
+            mSortIDMap.remove(fromPos);
+        } else {
+            mSortIDMap.add(toPos, currpair);
+            mSortIDMap.remove(++fromPos);
+        }
+
         for (int i = 0; i < mSortIDMap.size(); i++)
             mSortIDMap.get(i).setSortId(i);
 

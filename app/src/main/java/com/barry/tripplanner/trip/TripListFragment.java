@@ -7,17 +7,24 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.SortPair;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
+import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.widget.DragTripAdapter;
 
-public class TripListFragmentDrag extends DragRecycleListFragment {
+public class TripListFragment extends DragRecycleListFragment implements DragListCallback {
     ContentResolver mResolver;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_recycler_fab, container, false);
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -57,15 +64,7 @@ public class TripListFragmentDrag extends DragRecycleListFragment {
 
     @Override
     public void onMoveItem(int fromPos, int toPos) {
-        SortPair pair = mSortIDMap.get(fromPos);
-        if (fromPos < toPos) {
-            mSortIDMap.add(++toPos, pair);
-            mSortIDMap.remove(fromPos);
-        } else {
-            mSortIDMap.add(toPos, pair);
-            mSortIDMap.remove(++fromPos);
-        }
-        resetSortIdMap();
+        resetSortIdMap(fromPos, toPos);
         mResolver.notifyChange(mUri, null);
     }
 

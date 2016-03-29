@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.barry.tripplanner.trip.TripListFragmentDrag;
+import com.barry.tripplanner.trip.TripListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        replaceFragment(new TripListFragmentDrag());
+        replaceFragment(new TripListFragment());
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
 
         Fragment f = null;
         if (id == R.id.nav_camera) {
-           f = new TripListFragmentDrag();
+           f = new TripListFragment();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

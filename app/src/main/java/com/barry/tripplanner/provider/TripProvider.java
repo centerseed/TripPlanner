@@ -13,6 +13,16 @@ public class TripProvider extends BaseContentProvider {
     public final static String TABLE_ATTRACTION = "_attraction";
 
     public final static String FIELD_TRIP_NAME = "_trip_name";
+    public final static String FIELD_TRIP_DAY_IDS = "_trip_day_ids";
+    public final static String FIELD_TRIP_DAY_SORTS = "_trip_day_sorts";
+
+    public final static String FIELD_DAY_BELONG_TRIP = "_day_belong_trip";
+    public final static String FIELD_DAY_HIGHLIGHT = "_day_highlight";
+    public final static String FIELD_DAY_ATTRACTION_IDS = "_day_attraction_ids";
+    public final static String FIELD_DAY_ATTRACTION_SORTs = "_day_attraction_sorts";
+
+    public final static String FIELD_ATTRACTION_NAME = "_attraction_name";
+    public final static String FIELD_ATTRACTION_TYPE = "_attraction_type";
 
     @Override
     public boolean onCreate() {
@@ -22,7 +32,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 2;
+        private final static int _DBVersion = 4;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
@@ -34,7 +44,18 @@ public class TripProvider extends BaseContentProvider {
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_TRIP + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + FIELD_TRIP_NAME + " TEXT, "
-                    + FIELD_SORT_ID + " INTEGER "
+                    + FIELD_SORT_ID + " INTEGER, "
+                    + FIELD_TRIP_DAY_IDS + " TEXT, "
+                    + FIELD_TRIP_DAY_SORTS + " TEXT "
+                    + ");");
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_DAY + " ( "
+                    + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + FIELD_DAY_BELONG_TRIP + " INTEGER, "
+                    + FIELD_SORT_ID + " INTEGER, "
+                    + FIELD_DAY_HIGHLIGHT + " TEXT, "
+                    + FIELD_DAY_ATTRACTION_IDS + " TEXT, "
+                    + FIELD_DAY_ATTRACTION_SORTs + " TEXT "
                     + ");");
         }
 
