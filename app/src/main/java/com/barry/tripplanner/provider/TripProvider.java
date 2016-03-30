@@ -31,7 +31,7 @@ public class TripProvider extends BaseContentProvider {
     public final static String FIELD_STROKE_DELONG_DAY = "_stroke_belong_day";
     public final static String FIELD_STROKE_TIME = "_stroke_time";
     public final static String FIELD_STROKE_ATTRACTION_IDS = "_stroke_attraction_ids";
-    
+
     public final static String FIELD_ATTRACTION_NAME = "_attraction_name";
     public final static String FIELD_ATTRACTION_LAT = "_attraction_lat";
     public final static String FIELD_ATTRACTION_LNG = "_attraction_lng";

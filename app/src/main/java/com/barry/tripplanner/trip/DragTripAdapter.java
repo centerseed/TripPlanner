@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.barry.tripplanner.R;
@@ -37,6 +38,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemConstants;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
+import com.squareup.picasso.Picasso;
 
 public class DragTripAdapter
         extends AbstractRecyclerCursorAdapter<DragTripAdapter.MyViewHolder>
@@ -63,7 +65,9 @@ public class DragTripAdapter
         MyViewHolder holder = (MyViewHolder) viewHolder;
         holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
 
-        // set background resource (target view ID: container)
+        String photoUrl = cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO));
+        Picasso.with(m_context).load(photoUrl).resize(720, 300).centerCrop().into(holder.mBackground);
+
         final int dragState = holder.getDragStateFlags();
 
         if (((dragState & Draggable.STATE_FLAG_IS_UPDATED) != 0)) {
@@ -72,7 +76,6 @@ public class DragTripAdapter
             if ((dragState & Draggable.STATE_FLAG_IS_ACTIVE) != 0) {
                 bgResId = R.drawable.bg_item_dragging_active_state;
 
-                // need to clear drawable state here to get correct appearance of the dragging item.
                 DrawableUtils.clearState(holder.mContainer.getForeground());
             } else if ((dragState & Draggable.STATE_FLAG_DRAGGING) != 0) {
                 bgResId = R.drawable.bg_item_dragging_state;
@@ -88,11 +91,7 @@ public class DragTripAdapter
     public void onMoveItem(int fromPosition, int toPosition) {
         Log.d(TAG, "onMoveItem(fromPosition = " + fromPosition + ", toPosition = " + toPosition + ")");
 
-        if (fromPosition == toPosition) {
-            return;
-        }
-
-        // TODO: mProvider.moveItem(fromPosition, toPosition);
+        if (fromPosition == toPosition) return;
         if (mCallback != null) mCallback.onMoveItem(fromPosition, toPosition);
 
         notifyItemMoved(fromPosition, toPosition);
@@ -100,7 +99,6 @@ public class DragTripAdapter
 
     @Override
     public boolean onCheckCanStartDrag(MyViewHolder holder, int position, int x, int y) {
-        // x, y --- relative from the itemView's top-left
         final View containerView = holder.mContainer;
         final View dragHandleView = holder.mDragHandle;
 
@@ -112,24 +110,24 @@ public class DragTripAdapter
 
     @Override
     public ItemDraggableRange onGetItemDraggableRange(MyViewHolder holder, int position) {
-        // no drag-sortable range specified
         return null;
     }
 
-    // NOTE: Make accessible with short name
     private interface Draggable extends DraggableItemConstants {
     }
 
     public class MyViewHolder extends AbstractDraggableItemViewHolder {
         public FrameLayout mContainer;
         public View mDragHandle;
+        public ImageView mBackground;
         public TextView mTextView;
 
         public MyViewHolder(View v) {
             super(v);
             mContainer = (FrameLayout) v.findViewById(R.id.container);
             mDragHandle = v.findViewById(R.id.drag_handle);
-            mTextView = (TextView) v.findViewById(android.R.id.text1);
+            mTextView = (TextView) v.findViewById(R.id.name);
+            mBackground = (ImageView) v.findViewById(R.id.background);
 
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override

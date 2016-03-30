@@ -30,6 +30,12 @@
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/background"
+            android:scaleType="fitStart" />
+
         <View
             android:id="@+id/drag_handle"
             android:layout_width="32dp"
@@ -38,14 +44,15 @@
             android:background="#20000000"/>
 
         <TextView
-            android:id="@android:id/text1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top|left"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:gravity="center"
-            tools:ignore="RtlHardcoded"/>
+            tools:ignore="RtlHardcoded"
+            android:id="@+id/name"
+            android:textSize="20dp" />
 
     </FrameLayout>
 

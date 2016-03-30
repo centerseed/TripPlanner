@@ -18,15 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.ToolbarActivity;
+import com.squareup.picasso.Picasso;
 
 public class TripActivity extends ToolbarActivity {
 
     public static final String ARG_TRIP_ID = "trip_id";
     public static final String ARG_TRIP_NAME = "trip_name";
+    public static final String ARG_TRIP_PHOTO = "trip_photo";
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -48,6 +51,9 @@ public class TripActivity extends ToolbarActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        Picasso.with(this).load(getTripPhotoURL()).into(imageView);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +70,10 @@ public class TripActivity extends ToolbarActivity {
 
     private String getTripName() {
         return getIntent().getStringExtra(ARG_TRIP_NAME);
+    }
+
+    private String getTripPhotoURL() {
+        return getIntent().getStringExtra(ARG_TRIP_PHOTO);
     }
 
     @Override
