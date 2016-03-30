@@ -18,51 +18,68 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/title_target"
-            android:id="@+id/textView4" />
+            android:id="@+id/textView4"
+            android:layout_weight="1" />
 
         <EditText
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText" />
+            android:id="@+id/destination"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/choosePhotoLayout">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/title_choose_photo"
-            android:id="@+id/textView5" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/LinearLayout">
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/view" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/title_choose_photo"
+                android:id="@+id/textView5" />
 
-    </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recycleView" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/title_go_time"
-            android:id="@+id/textView6" />
+            android:id="@+id/textView6"
+            android:layout_weight="1" />
 
         <EditText
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText2" />
+            android:id="@+id/editText2"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,12 +92,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/title_back_time"
-            android:id="@+id/textView7" />
+            android:id="@+id/textView7"
+            android:layout_weight="1" />
 
         <EditText
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText3" />
+            android:id="@+id/editText3"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
 </LinearLayout>

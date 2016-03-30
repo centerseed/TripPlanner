@@ -16,7 +16,7 @@
     <string name="title_attraction">景點</string>
     <string name="title_memo">備忘</string>
     <string name="title_target">目的地</string>
-    <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛?</string>
+    <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛</string>
     <string name="title_go_time">出發時間</string>
     <string name="title_back_time">回程時間</string>
 </resources>

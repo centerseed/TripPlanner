@@ -13,6 +13,9 @@ public class TripProvider extends BaseContentProvider {
     public final static String TABLE_ATTRACTION = "_attraction";
 
     public final static String FIELD_TRIP_NAME = "_trip_name";
+    public final static String FIELD_TRIP_PHOTO = "_trip_photo";
+    public final static String FIELD_TRIP_START_DAY = "_trip_start_day";
+    public final static String FIELD_TRIP_END_DAY = "_trip_end_day";
     public final static String FIELD_TRIP_DAY_IDS = "_trip_day_ids";
     public final static String FIELD_TRIP_DAY_SORTS = "_trip_day_sorts";
 
