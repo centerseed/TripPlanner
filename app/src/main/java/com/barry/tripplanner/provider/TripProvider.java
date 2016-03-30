@@ -8,24 +8,37 @@ import com.barry.tripplanner.base.BaseContentProvider;
 
 public class TripProvider extends BaseContentProvider {
 
+    public final static String TYPE_ATTARCTION_LANDSCAPE = "_attr_landscape";
+    public final static String TYPE_ATTARCTION_RESTAURANT = "_attr_restaurant";
+    public final static String TYPE_ATTARCTION_HOTEL = "_attr_hotel";
+
     public final static String TABLE_TRIP = "_trip";
     public final static String TABLE_DAY = "_day";
+    public final static String TABLE_STROKE = "_stroke";
     public final static String TABLE_ATTRACTION = "_attraction";
 
     public final static String FIELD_TRIP_NAME = "_trip_name";
+    public final static String FIELD_TRIP_DESTINATION = "_trip_destination";
     public final static String FIELD_TRIP_PHOTO = "_trip_photo";
     public final static String FIELD_TRIP_START_DAY = "_trip_start_day";
     public final static String FIELD_TRIP_END_DAY = "_trip_end_day";
-    public final static String FIELD_TRIP_DAY_IDS = "_trip_day_ids";
-    public final static String FIELD_TRIP_DAY_SORTS = "_trip_day_sorts";
+    public final static String FIELD_ATTRACTION_IDS = "_trip_attraction_ids";
 
     public final static String FIELD_DAY_BELONG_TRIP = "_day_belong_trip";
     public final static String FIELD_DAY_HIGHLIGHT = "_day_highlight";
-    public final static String FIELD_DAY_ATTRACTION_IDS = "_day_attraction_ids";
-    public final static String FIELD_DAY_ATTRACTION_SORTs = "_day_attraction_sorts";
 
+    public final static String FIELD_STROKE_BELONG_TRIP = "_stroke_belong_trip";
+    public final static String FIELD_STROKE_DELONG_DAY = "_stroke_belong_day";
+    public final static String FIELD_STROKE_TIME = "_stroke_time";
+    public final static String FIELD_STROKE_ATTRACTION_IDS = "_stroke_attraction_ids";
+    
     public final static String FIELD_ATTRACTION_NAME = "_attraction_name";
+    public final static String FIELD_ATTRACTION_LAT = "_attraction_lat";
+    public final static String FIELD_ATTRACTION_LNG = "_attraction_lng";
+    public final static String FIELD_ATTRACTION_SNAPSHOT = "_attraction_snapshot";
+    public final static String FIELD_ATTRACTION_RANK = "_attraction_rank";
     public final static String FIELD_ATTRACTION_TYPE = "_attraction_type";
+    public final static String FIELD_ATTRACTION_AVAILABLE_TIME = "_attraction_available_time";
 
     @Override
     public boolean onCreate() {
@@ -35,7 +48,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 4;
+        private final static int _DBVersion = 5;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
@@ -47,18 +60,19 @@ public class TripProvider extends BaseContentProvider {
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_TRIP + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + FIELD_TRIP_NAME + " TEXT, "
+                    + FIELD_TRIP_DESTINATION + " TEXT, "
                     + FIELD_SORT_ID + " INTEGER, "
-                    + FIELD_TRIP_DAY_IDS + " TEXT, "
-                    + FIELD_TRIP_DAY_SORTS + " TEXT "
+                    + FIELD_TRIP_PHOTO + " TEXT, "
+                    + FIELD_TRIP_START_DAY + " TEXT, "
+                    + FIELD_TRIP_END_DAY + " TEXT, "
+                    + FIELD_ATTRACTION_IDS + " TEXT "
                     + ");");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_DAY + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + FIELD_DAY_BELONG_TRIP + " INTEGER, "
                     + FIELD_SORT_ID + " INTEGER, "
-                    + FIELD_DAY_HIGHLIGHT + " TEXT, "
-                    + FIELD_DAY_ATTRACTION_IDS + " TEXT, "
-                    + FIELD_DAY_ATTRACTION_SORTs + " TEXT "
+                    + FIELD_DAY_HIGHLIGHT + " TEXT "
                     + ");");
         }
 

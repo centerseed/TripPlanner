@@ -43,6 +43,16 @@ public abstract class BaseContentProvider extends ContentProvider {
         return c;
     }
 
+    /*
+    public Cursor queryJoin(Uri uri, String joinTable, String oriID, String joinID, String joinWhere, String[] selectionArgs, String orderBy) {
+        String table = getTable(uri);
+        if (orderBy == null)
+            orderBy = FIELD_ID + " ASC";
+        Cursor c = mDb.getReadableDatabase().rawQuery("SELECT * FROM " + table + " a INNER JOIN " + joinTable + " b ON + a." + oriID + "=b." + joinID + " WHERE b." + joinWhere, new String[]{selectionArgs});
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+        return c;
+    } */
+
     @Override
     public int update(Uri uri, ContentValues values, String whereClause, String[] whereArgs) {
         return mDb.getWritableDatabase().update(getTable(uri), values, whereClause, whereArgs);

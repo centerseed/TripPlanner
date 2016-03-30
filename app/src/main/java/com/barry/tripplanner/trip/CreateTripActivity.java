@@ -14,8 +14,10 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.barry.tripplanner.R;
+import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.utils.URLBuilder;
 
 import org.jsoup.Connection;
@@ -36,7 +38,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
     FrameLayout mChoosePhotoLayout;
     TextView mDestination;
 
-    ContentValues tripValue = new ContentValues();
+    ContentValues mTripValue = new ContentValues();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,8 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
         mDestination.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) new getPhotoListTask(mDestination.getText().toString()).execute();
+                if (!hasFocus && mDestination.getText().length() > 0)
+                    new getPhotoListTask(mDestination.getText().toString()).execute();
             }
         });
 
@@ -72,14 +75,23 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             finish();
             return true;
         }
+        if (item.getItemId() == R.id.action_done) {
+            if (!mTripValue.containsKey(TripProvider.FIELD_TRIP_NAME)) {
+                Toast.makeText(this, R.string.error_no_trip_name, Toast.LENGTH_LONG).show();
+            }
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onThumbSelect(String url, boolean isCheck) {
         mAdapter.notifyDataSetChanged();
-        if (isCheck) tripValue.put("PHOTO", url);
-        else tripValue.remove("PHOTO");
+        if (isCheck)
+            mTripValue.put(TripProvider.FIELD_TRIP_PHOTO, url);
+        else
+            mTripValue.remove(TripProvider.FIELD_TRIP_PHOTO);
     }
 
     class getPhotoListTask extends AsyncTask<Void, Void, Void> {
