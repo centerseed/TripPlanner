@@ -15,8 +15,11 @@
     <string name="title_day">日程</string>
     <string name="title_attraction">景點</string>
     <string name="title_memo">備忘</string>
+
+    <string name="title_create_trip">新增旅程</string>
+    <string name="title_edit_trip">編輯旅程</string>
     <string name="title_trip_name">旅程名稱</string>
-    <string name="title_trip_name_hint">一個人的東京小確幸</string>
+    <string name="title_trip_name_hint">東京小旅行</string>
     <string name="title_destination">目的地</string>
     <string name="title_destination_hint">例如：北海道，巴黎</string>
     <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛</string>
