@@ -28,7 +28,7 @@ public class TripProvider extends BaseContentProvider {
     public final static String FIELD_DAY_HIGHLIGHT = "_day_highlight";
 
     public final static String FIELD_STROKE_BELONG_TRIP = "_stroke_belong_trip";
-    public final static String FIELD_STROKE_DELONG_DAY = "_stroke_belong_day";
+    public final static String FIELD_STROKE_BELONG_DAY = "_stroke_belong_day";
     public final static String FIELD_STROKE_TIME = "_stroke_time";
     public final static String FIELD_STROKE_ATTRACTION_IDS = "_stroke_attraction_ids";
 
@@ -59,9 +59,9 @@ public class TripProvider extends BaseContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_TRIP + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + FIELD_SORT_ID + " INTEGER, "
                     + FIELD_TRIP_NAME + " TEXT, "
                     + FIELD_TRIP_DESTINATION + " TEXT, "
-                    + FIELD_SORT_ID + " INTEGER, "
                     + FIELD_TRIP_PHOTO + " TEXT, "
                     + FIELD_TRIP_START_DAY + " TEXT, "
                     + FIELD_TRIP_END_DAY + " TEXT, "
@@ -70,9 +70,18 @@ public class TripProvider extends BaseContentProvider {
 
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_DAY + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + FIELD_DAY_BELONG_TRIP + " INTEGER, "
                     + FIELD_SORT_ID + " INTEGER, "
+                    + FIELD_DAY_BELONG_TRIP + " INTEGER, "
                     + FIELD_DAY_HIGHLIGHT + " TEXT "
+                    + ");");
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_STROKE + " ( "
+                    + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + FIELD_SORT_ID + " INTEGER, "
+                    + FIELD_STROKE_BELONG_TRIP + " INTEGER, "
+                    + FIELD_STROKE_BELONG_DAY + " INTEGER, "
+                    + FIELD_STROKE_TIME + " TEXT, "
+                    + FIELD_STROKE_ATTRACTION_IDS + " TEXT "
                     + ");");
         }
 

@@ -37,12 +37,13 @@ import java.util.Calendar;
 
 public class CreateTripActivity extends AppCompatActivity implements ThumbAdapter.ThumbCallback {
 
+    protected FrameLayout mChoosePhotoLayout;
+    protected TextView mDestination;
+
     ArrayList<String> mPhotos = new ArrayList<>();
     ThumbAdapter mAdapter;
     RecyclerView mRecyclerView;
     ProgressBar mPbLoading;
-    FrameLayout mChoosePhotoLayout;
-    TextView mDestination;
 
     EditText mStartTime;
     EditText mEndTime;
