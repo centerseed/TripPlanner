@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.barry.tripplanner.R;
@@ -117,14 +118,14 @@ public class DragTripAdapter
     }
 
     public class MyViewHolder extends AbstractDraggableItemViewHolder {
-        public FrameLayout mContainer;
+        public LinearLayout mContainer;
         public View mDragHandle;
         public ImageView mBackground;
         public TextView mTextView;
 
         public MyViewHolder(View v) {
             super(v);
-            mContainer = (FrameLayout) v.findViewById(R.id.container);
+            mContainer = (LinearLayout) v.findViewById(R.id.container);
             mDragHandle = v.findViewById(R.id.drag_handle);
             mTextView = (TextView) v.findViewById(R.id.name);
             mBackground = (ImageView) v.findViewById(R.id.background);

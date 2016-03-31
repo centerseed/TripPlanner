@@ -1,6 +1,8 @@
 package com.barry.tripplanner.trip;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.utils.TimeUtils;
 import com.barry.tripplanner.utils.URLBuilder;
 
 import org.jsoup.Connection;
@@ -28,6 +33,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CreateTripActivity extends AppCompatActivity implements ThumbAdapter.ThumbCallback {
 
@@ -38,6 +44,10 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
     FrameLayout mChoosePhotoLayout;
     TextView mDestination;
 
+    EditText mStartTime;
+    EditText mEndTime;
+
+    private int mYear, mMonth, mDay, mHour, mMinute;
     ContentValues mTripValue = new ContentValues();
 
     @Override
@@ -57,6 +67,11 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
                     new getPhotoListTask(mDestination.getText().toString()).execute();
             }
         });
+
+        mStartTime = (EditText) findViewById(R.id.startTime);
+        mStartTime.setOnClickListener(new DatePickListener());
+        mEndTime = (EditText) findViewById(R.id.endTime);
+        mEndTime.setOnClickListener(new DatePickListener());
 
         mChoosePhotoLayout.setVisibility(View.GONE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -141,6 +156,31 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             mAdapter = new ThumbAdapter(getApplicationContext(), mPhotos, CreateTripActivity.this);
             mRecyclerView.setAdapter(mAdapter);
             mPbLoading.setVisibility(View.GONE);
+        }
+    }
+
+    public class DatePickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            final EditText editText = (EditText) view;
+
+            final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog dpd = new DatePickerDialog(CreateTripActivity.this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            // 完成選擇，顯示日期
+                            editText.setText(year + "-" + (monthOfYear + 1) + "-"
+                                    + dayOfMonth);
+
+                        }
+                    }, mYear, mMonth, mDay);
+            dpd.show();
         }
     }
 }

@@ -61,7 +61,8 @@ public class DragDayAdapter
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final Cursor cursor) {
         MyViewHolder holder = (MyViewHolder) viewHolder;
-        holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_SORT_ID)));
+        int day = cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_SORT_ID));
+        holder.mTextView.setText(++day + "");
         holder.mHighLight.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_DAY_HIGHLIGHT)));
 
         // set background resource (target view ID: container)

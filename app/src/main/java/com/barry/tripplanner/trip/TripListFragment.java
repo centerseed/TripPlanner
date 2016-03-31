@@ -17,6 +17,7 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.task.CreateTripTask;
 
 public class TripListFragment extends DragRecycleListFragment implements DragListCallback {
     ContentResolver mResolver;
@@ -57,11 +58,6 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
 
     private void initDummyData() {
         ContentValues values;
-        //http://farm5.static.flickr.com/4060/4650494949_2d3185a48f_o.jpg
-        // http://qglbbs.b0.upaiyun.com/forum/201407/21/155844wjhvzn76tkqugwpq.jpg
-        //http://www.4p.com.tw/eWeb_spunktour/IMGDB/000453/00002613.jpg
-        // http://www.gooden.link/image/Document/201602051103298887.jpg
-        //http://cn.guidetoiceland.is/image/223042/x/0/most-unique-experiences-in-iceland-7.jpg
         mResolver = getContext().getContentResolver();
 
         values = new ContentValues();
@@ -69,37 +65,27 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
         values.put(TripProvider.FIELD_TRIP_NAME, "東京");
         values.put(TripProvider.FIELD_TRIP_PHOTO, "http://farm5.static.flickr.com/4060/4650494949_2d3185a48f_o.jpg");
         values.put(TripProvider.FIELD_SORT_ID, 0);
-        mResolver.insert(mUri, values);
+        values.put(TripProvider.FIELD_TRIP_START_DAY, "2015-3-10");
+        values.put(TripProvider.FIELD_TRIP_END_DAY, "2015-3-16");
+        new CreateTripTask(getContext()).withContent(values).execute();
 
         values = new ContentValues();
         values.put(TripProvider.FIELD_ID, "京都".hashCode());
         values.put(TripProvider.FIELD_TRIP_NAME, "京都");
         values.put(TripProvider.FIELD_TRIP_PHOTO, "http://qglbbs.b0.upaiyun.com/forum/201407/21/155844wjhvzn76tkqugwpq.jpg");
         values.put(TripProvider.FIELD_SORT_ID, 1);
-        mResolver.insert(mUri, values);
+        values.put(TripProvider.FIELD_TRIP_START_DAY, "2016-12-29");
+        values.put(TripProvider.FIELD_TRIP_END_DAY, "2017-1-2");
+        new CreateTripTask(getContext()).withContent(values).execute();
 
         values = new ContentValues();
         values.put(TripProvider.FIELD_ID, "北海道".hashCode());
         values.put(TripProvider.FIELD_TRIP_NAME, "北海道");
         values.put(TripProvider.FIELD_TRIP_PHOTO, "http://www.4p.com.tw/eWeb_spunktour/IMGDB/000453/00002613.jpg");
         values.put(TripProvider.FIELD_SORT_ID, 2);
-        mResolver.insert(mUri, values);
-
-        values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "巴黎".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "巴黎");
-        values.put(TripProvider.FIELD_TRIP_PHOTO, "http://www.gooden.link/image/Document/201602051103298887.jpg");
-        values.put(TripProvider.FIELD_SORT_ID, 3);
-        mResolver.insert(mUri, values);
-
-        values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "冰島".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "冰島");
-        values.put(TripProvider.FIELD_TRIP_PHOTO, "http://image.lifetm.com/ProductPhoto/2011/05/31/jpg/20110531094136948C6EC818B96.jpg");
-        values.put(TripProvider.FIELD_SORT_ID, 4);
-        mResolver.insert(mUri, values);
-
-        mResolver.notifyChange(mUri, null);
+        values.put(TripProvider.FIELD_TRIP_START_DAY, "2015-4-10");
+        values.put(TripProvider.FIELD_TRIP_END_DAY, "2015-4-21");
+        new CreateTripTask(getContext()).withContent(values).execute();
     }
 
     @Override

@@ -15,45 +15,52 @@
        limitations under the License.
 -->
 <!-- NOTE: should use FrameLayout or RelativeLayout for parent of the "@id/container" view (for Android 2.3 compatibility) -->
-<FrameLayout
+<LinearLayout
     style="@style/commonListItemStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height"
+    android:layout_height="@dimen/item_trip_height"
     android:background="@color/bg_swipe_item_neutral">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
-        android:foreground="?attr/selectableItemBackground">
+        android:foreground="?attr/selectableItemBackground"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/background"
-            android:scaleType="fitStart" />
+            android:layout_weight="0.8">
 
-        <View
-            android:id="@+id/drag_handle"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="top|left"
-            android:background="#20000000"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/background"
+                android:scaleType="centerCrop" />
+
+            <View
+                android:id="@+id/drag_handle"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|left"
+                android:background="#20000000"/>
+
+        </FrameLayout>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="top|left"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:gravity="center"
-            tools:ignore="RtlHardcoded"
             android:id="@+id/name"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp" />
 
-    </FrameLayout>
+    </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

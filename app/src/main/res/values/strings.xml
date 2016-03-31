@@ -16,7 +16,9 @@
     <string name="title_attraction">景點</string>
     <string name="title_memo">備忘</string>
     <string name="title_trip_name">旅程名稱</string>
+    <string name="title_trip_name_hint">一個人的東京小確幸</string>
     <string name="title_destination">目的地</string>
+    <string name="title_destination_hint">例如：北海道，巴黎</string>
     <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛</string>
     <string name="title_go_time">出發時間</string>
     <string name="title_back_time">回程時間</string>
