@@ -12,21 +12,12 @@ import com.barry.tripplanner.utils.TimeUtils;
 public class CreateTripTask extends AsyncTask<Void, Void, Void> {
     Context mContext;
     ContentValues mValues;
-    String mStart;
-    String mEnd;
-
     public CreateTripTask(Context context) {
         mContext = context;
     }
 
     public CreateTripTask withContent(ContentValues values) {
         mValues = values;
-        return this;
-    }
-
-    public CreateTripTask timeBetween(String start, String end) {
-        mStart = start;
-        mEnd = end;
         return this;
     }
 

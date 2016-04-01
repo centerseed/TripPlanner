@@ -1,9 +1,11 @@
 package com.barry.tripplanner.trip;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
@@ -17,8 +19,17 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
 
     @Override
     public void onResume() {
+        mResolver = getContext().getContentResolver();
         super.onResume();
-        initDummyData();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader cl = (CursorLoader) super.onCreateLoader(id, args);
+        cl.setSelection(TripProvider.FIELD_DAY_BELONG_TRIP + "=?");
+        cl.setSelectionArgs(new String[]{getTripId() + ""});
+        cl.setSortOrder(TripProvider.FIELD_SORT_ID + " ASC");
+        return cl;
     }
 
     @Override
@@ -45,20 +56,6 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
     @Override
     protected void onSync() {
 
-    }
-
-    private void initDummyData() {
-        mResolver = getContext().getContentResolver();
-        for (int i = 0; i < 5; i++) {
-            ContentValues values = new ContentValues();
-            values.put(TripProvider.FIELD_ID, ("第" + i + "天的行程").hashCode());
-            values.put(TripProvider.FIELD_DAY_BELONG_TRIP, getTripId());
-            values.put(TripProvider.FIELD_SORT_ID, i + "");
-            values.put(TripProvider.FIELD_DAY_HIGHLIGHT, "第" + i + "天的行程");
-
-            mResolver.insert(mUri, values);
-        }
-        mResolver.notifyChange(mUri, null);
     }
 
     private int getTripId() {
