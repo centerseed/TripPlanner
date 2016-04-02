@@ -1,6 +1,7 @@
 package com.barry.tripplanner.utils;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
@@ -9,15 +10,9 @@ public class TimeUtils {
             String starts[] = start.split("-");
             String ends[] = end.split("-");
             Calendar startDate = Calendar.getInstance();
+            startDate.setTime(new Date(Integer.valueOf(starts[0]) - 1900, Integer.valueOf(starts[1]) - 1, Integer.valueOf(starts[2])));
             Calendar endDate = Calendar.getInstance();
-
-            startDate.set(Calendar.YEAR, Integer.valueOf(starts[0]),
-                    Calendar.MONTH, Integer.valueOf(starts[1]),
-                    Calendar.DAY_OF_MONTH, Integer.valueOf(starts[2]));
-
-            endDate.set(Calendar.YEAR, Integer.valueOf(ends[0]),
-                    Calendar.MONTH, Integer.valueOf(ends[1]),
-                    Calendar.DAY_OF_MONTH, Integer.valueOf(ends[2]));
+            endDate.setTime(new Date(Integer.valueOf(ends[0]) - 1900, Integer.valueOf(ends[1]) - 1, Integer.valueOf(ends[2])));
             return daysBetween(startDate, endDate);
         } catch (Exception e) {
             return 0;
