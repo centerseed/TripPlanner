@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TripPlanner</string>
+    <string name="facebook_app_id">1604248769819663</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -25,6 +26,11 @@
     <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛</string>
     <string name="title_go_time">出發時間</string>
     <string name="title_back_time">回程時間</string>
+    <string name="title_local_usage">不登入，我想直接使用</string>
+
+    <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
+        您也可以不登入，在本機端編輯您的旅程，日後再登入。
+    </string>
 
     <string name="error_no_trip_name">要輸入旅程名稱才可以建立喔~</string>
 </resources>

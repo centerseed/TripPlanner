@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tripAccountType" translatable="false">trip_planner_account</string>
+    <string name="account_type_fb" translatable="false">com.barry.tripplaner_fb</string>
+</resources>
