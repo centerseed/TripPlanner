@@ -66,6 +66,10 @@ public class DragTripAdapter
         MyViewHolder holder = (MyViewHolder) viewHolder;
         holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
 
+        String interval = cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)) + " ~ " +
+                cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY));
+        holder.mInterval.setText(interval);
+
         String photoUrl = cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO));
         Picasso.with(m_context).load(photoUrl).resize(720, 300).centerCrop().into(holder.mBackground);
 
@@ -122,12 +126,14 @@ public class DragTripAdapter
         public View mDragHandle;
         public ImageView mBackground;
         public TextView mTextView;
+        public TextView mInterval;
 
         public MyViewHolder(View v) {
             super(v);
             mContainer = (LinearLayout) v.findViewById(R.id.container);
             mDragHandle = v.findViewById(R.id.drag_handle);
             mTextView = (TextView) v.findViewById(R.id.name);
+            mInterval = (TextView) v.findViewById(R.id.interval);
             mBackground = (ImageView) v.findViewById(R.id.background);
 
             mContainer.setOnClickListener(new View.OnClickListener() {
