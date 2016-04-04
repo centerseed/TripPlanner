@@ -22,6 +22,6 @@ public class TimeUtils {
     public static int daysBetween(Calendar startDate, Calendar endDate) {
         long end = endDate.getTimeInMillis();
         long start = startDate.getTimeInMillis();
-        return (int) TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+        return (int) TimeUnit.MILLISECONDS.toDays(Math.abs(end - start)) + 1;
     }
 }

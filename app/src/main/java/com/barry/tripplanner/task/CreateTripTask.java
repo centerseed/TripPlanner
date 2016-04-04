@@ -25,8 +25,8 @@ public class CreateTripTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         int days = TimeUtils.daysBetween(mValues.getAsString(TripProvider.FIELD_TRIP_START_DAY), mValues.getAsString(TripProvider.FIELD_TRIP_END_DAY));
 
-        Uri tripUri = TripProvider.getProviderUri(mContext.getString(R.string.auth_provider_stock), TripProvider.TABLE_TRIP);
-        Uri dayUri = TripProvider.getProviderUri(mContext.getString(R.string.auth_provider_stock), TripProvider.TABLE_DAY);
+        Uri tripUri = TripProvider.getProviderUri(mContext.getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
+        Uri dayUri = TripProvider.getProviderUri(mContext.getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
 
         mContext.getContentResolver().insert(tripUri, mValues);
 

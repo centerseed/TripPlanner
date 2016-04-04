@@ -2,6 +2,8 @@ package com.barry.tripplanner.trip;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.task.CreateTripTask;
 import com.barry.tripplanner.utils.TimeUtils;
 import com.barry.tripplanner.utils.URLBuilder;
 
@@ -39,17 +42,18 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
 
     protected FrameLayout mChoosePhotoLayout;
     protected TextView mDestination;
+    protected TextView mName;
 
     ArrayList<String> mPhotos = new ArrayList<>();
     ThumbAdapter mAdapter;
     RecyclerView mRecyclerView;
     ProgressBar mPbLoading;
 
-    EditText mStartTime;
-    EditText mEndTime;
+    protected EditText mStartTime;
+    protected EditText mEndTime;
 
-    private int mYear, mMonth, mDay, mHour, mMinute;
-    ContentValues mTripValue = new ContentValues();
+    protected int mYear, mMonth, mDay, mHour, mMinute;
+    protected ContentValues mTripValue = new ContentValues();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_create_trip);
 
+        mName = (TextView) findViewById(R.id.name);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
         mPbLoading = (ProgressBar) findViewById(R.id.progressBar);
         mChoosePhotoLayout = (FrameLayout) findViewById(R.id.choosePhotoLayout);
@@ -92,9 +97,20 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             return true;
         }
         if (item.getItemId() == R.id.action_done) {
-            if (!mTripValue.containsKey(TripProvider.FIELD_TRIP_NAME)) {
+            mTripValue.put(TripProvider.FIELD_ID, mName.getText().hashCode());
+            mTripValue.put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
+            mTripValue.put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
+            mTripValue.put(TripProvider.FIELD_SORT_ID, getLargestTripSort() + 1);
+            mTripValue.put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
+            mTripValue.put(TripProvider.FIELD_TRIP_END_DAY, mEndTime.getText().toString());
+            if (mTripValue.getAsString(TripProvider.FIELD_TRIP_NAME).length() == 0) {
                 Toast.makeText(this, R.string.error_no_trip_name, Toast.LENGTH_LONG).show();
+                return true;
             }
+
+            new CreateTripTask(this).withContent(mTripValue).execute();
+            Toast.makeText(this, R.string.result_create_trip_success, Toast.LENGTH_SHORT).show();
+            finish();
 
             return true;
         }
@@ -165,11 +181,18 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
         @Override
         public void onClick(View view) {
             final EditText editText = (EditText) view;
-
+            String dates[] = editText.getText().toString().split("-");
             final Calendar c = Calendar.getInstance();
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            if (dates.length != 3) {
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH) + 1;
+                mDay = c.get(Calendar.DATE);
+            } else {
+                mYear = Integer.valueOf(dates[0]);
+                mMonth = Integer.valueOf(dates[1]);
+                mDay = Integer.valueOf(dates[2]);
+            }
 
             DatePickerDialog dpd = new DatePickerDialog(CreateTripActivity.this,
                     new DatePickerDialog.OnDateSetListener() {
@@ -180,8 +203,19 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
                                     + dayOfMonth);
 
                         }
-                    }, mYear, mMonth, mDay);
+                    }, mYear, --mMonth, mDay);
             dpd.show();
         }
+    }
+
+    private int getLargestTripSort() {
+        Uri uri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
+        Cursor c = getContentResolver().query(uri, null, TripProvider.FIELD_ID + ">?", new String[]{"0"}, TripProvider.FIELD_SORT_ID + " DESC");
+        if (c != null && c.moveToFirst()) {
+            int sort = c.getInt(c.getColumnIndex(TripProvider.FIELD_SORT_ID));
+            c.close();
+            return sort;
+        }
+        return 0;
     }
 }

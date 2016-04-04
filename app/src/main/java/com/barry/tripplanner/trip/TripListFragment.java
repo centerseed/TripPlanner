@@ -2,6 +2,7 @@ package com.barry.tripplanner.trip;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -48,7 +49,7 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
 
     @Override
     protected Uri getUri() {
-        return TripProvider.getProviderUri(getContext().getString(R.string.auth_provider_stock), TripProvider.TABLE_TRIP);
+        return TripProvider.getProviderUri(getContext().getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
     }
 
     @Override
@@ -61,8 +62,9 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
         mResolver = getContext().getContentResolver();
 
         values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "東京".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "東京");
+        values.put(TripProvider.FIELD_ID, "東京小旅行".hashCode());
+        values.put(TripProvider.FIELD_TRIP_DESTINATION, "東京");
+        values.put(TripProvider.FIELD_TRIP_NAME, "東京小旅行");
         values.put(TripProvider.FIELD_TRIP_PHOTO, "http://farm5.static.flickr.com/4060/4650494949_2d3185a48f_o.jpg");
         values.put(TripProvider.FIELD_SORT_ID, 0);
         values.put(TripProvider.FIELD_TRIP_START_DAY, "2015-3-10");
@@ -70,8 +72,9 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
         new CreateTripTask(getContext()).withContent(values).execute();
 
         values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "京都".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "京都");
+        values.put(TripProvider.FIELD_ID, "古都跨年行".hashCode());
+        values.put(TripProvider.FIELD_TRIP_NAME, "古都跨年行");
+        values.put(TripProvider.FIELD_TRIP_DESTINATION, "京都");
         values.put(TripProvider.FIELD_TRIP_PHOTO, "http://qglbbs.b0.upaiyun.com/forum/201407/21/155844wjhvzn76tkqugwpq.jpg");
         values.put(TripProvider.FIELD_SORT_ID, 1);
         values.put(TripProvider.FIELD_TRIP_START_DAY, "2016-12-29");
@@ -79,8 +82,9 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
         new CreateTripTask(getContext()).withContent(values).execute();
 
         values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "北海道".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "北海道");
+        values.put(TripProvider.FIELD_ID, "北海道自然探險".hashCode());
+        values.put(TripProvider.FIELD_TRIP_NAME, "北海道自然探險");
+        values.put(TripProvider.FIELD_TRIP_DESTINATION, "北海道");
         values.put(TripProvider.FIELD_TRIP_PHOTO, "http://www.4p.com.tw/eWeb_spunktour/IMGDB/000453/00002613.jpg");
         values.put(TripProvider.FIELD_SORT_ID, 2);
         values.put(TripProvider.FIELD_TRIP_START_DAY, "2015-4-10");
@@ -97,9 +101,15 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
     @Override
     public void onItemClick(Cursor cursor) {
         Intent intent = new Intent(getActivity(), TripActivity.class);
-        intent.putExtra(TripActivity.ARG_TRIP_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
-        intent.putExtra(TripActivity.ARG_TRIP_NAME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
-        intent.putExtra(TripActivity.ARG_TRIP_PHOTO, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO)));
+        ContentValues values = new ContentValues();
+        values.put(TripProvider.FIELD_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
+        values.put(TripProvider.FIELD_TRIP_PHOTO, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO)));
+        values.put(TripProvider.FIELD_TRIP_NAME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
+        values.put(TripProvider.FIELD_TRIP_DESTINATION, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_DESTINATION)));
+        values.put(TripProvider.FIELD_TRIP_START_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)));
+        values.put(TripProvider.FIELD_TRIP_END_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY)));
+
+        intent.putExtra(TripActivity.ARG_TRIP_VALUES, values);
         startActivity(intent);
     }
 }

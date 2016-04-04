@@ -28,7 +28,7 @@
 
         <provider
             android:name=".provider.TripProvider"
-            android:authorities="@string/auth_provider_stock"
+            android:authorities="@string/auth_provider_trip"
             android:exported="false"
             android:label="@string/title_trip_provider"
             android:syncable="true" />
@@ -40,6 +40,7 @@
         <activity android:name=".trip.CreateTripActivity" />
         <activity android:name=".trip.DayActivity"></activity>
         <activity android:name=".account.AuthenticatorActivity"></activity>
+        <activity android:name=".trip.EditTripActivity"></activity>
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=

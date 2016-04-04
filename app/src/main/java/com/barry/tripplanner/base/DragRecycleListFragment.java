@@ -93,7 +93,7 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mAdapter.swapCursor(null);
     }
 
     private boolean supportsViewElevation() {

@@ -20,7 +20,7 @@
     <string name="title_create_trip">新增旅程</string>
     <string name="title_edit_trip">編輯旅程</string>
     <string name="title_trip_name">旅程名稱</string>
-    <string name="title_trip_name_hint">東京小旅行</string>
+    <string name="title_trip_name_hint">例如：東京小旅行</string>
     <string name="title_destination">目的地</string>
     <string name="title_destination_hint">例如：北海道，巴黎</string>
     <string name="title_choose_photo">選擇一張圖片，讓行程更加繽紛</string>
@@ -31,6 +31,8 @@
     <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
         您也可以不登入，在本機端編輯您的旅程，日後再登入。
     </string>
+
+    <string name="result_create_trip_success">建立旅程成功</string>
 
     <string name="error_no_trip_name">要輸入旅程名稱才可以建立喔~</string>
 </resources>

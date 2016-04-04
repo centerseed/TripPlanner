@@ -15,6 +15,7 @@ import com.barry.tripplanner.provider.TripProvider;
 
 public class DayListFragment extends DragRecycleListFragment implements DragListCallback {
 
+    public static final String ARG_TRIP_ID = "trip_id";
     ContentResolver mResolver;
 
     @Override
@@ -28,7 +29,6 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
         CursorLoader cl = (CursorLoader) super.onCreateLoader(id, args);
         cl.setSelection(TripProvider.FIELD_DAY_BELONG_TRIP + "=?");
         cl.setSelectionArgs(new String[]{getTripId() + ""});
-        cl.setSortOrder(TripProvider.FIELD_SORT_ID + " ASC");
         return cl;
     }
 
@@ -39,7 +39,7 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
 
     @Override
     protected Uri getUri() {
-        return TripProvider.getProviderUri(getContext().getString(R.string.auth_provider_stock), TripProvider.TABLE_DAY);
+        return TripProvider.getProviderUri(getContext().getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
     }
 
     @Override
@@ -59,6 +59,6 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
     }
 
     private int getTripId() {
-        return getArguments().getInt(TripActivity.ARG_TRIP_ID);
+        return getArguments().getInt(ARG_TRIP_ID);
     }
 }
