@@ -192,6 +192,14 @@ public class TripActivity extends ToolbarActivity {
                 f.setArguments(bundle);
                 return f;
             }
+
+            if (position == 1) {
+                Fragment f = new AttractionFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt(DayListFragment.ARG_TRIP_ID, getTripId());
+                f.setArguments(bundle);
+                return f;
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 

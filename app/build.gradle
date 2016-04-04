@@ -10,7 +10,14 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+
     signingConfigs {
         release {
             storeFile file("../keystore.jks")
@@ -19,7 +26,7 @@ android {
             keyPassword "ncu03021"
         }
         debug {
-            storeFile file('/Users/Mac/TripPlanner/keystore.jks')
+            storeFile file('../keystore.jks')
             storePassword "ncu03021"
             keyAlias "tripplannenr"
             keyPassword "ncu03021"
@@ -36,12 +43,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:design:23.2.1'
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.7@aar') {
         transitive = true
     }
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.google.android.gms:play-services:8.4.0'
 }

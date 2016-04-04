@@ -27,6 +27,7 @@
     <string name="title_go_time">出發時間</string>
     <string name="title_back_time">回程時間</string>
     <string name="title_local_usage">不登入，我想直接使用</string>
+    <string name="title_add_attraction">新增景點</string>
 
     <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
         您也可以不登入，在本機端編輯您的旅程，日後再登入。
@@ -35,4 +36,6 @@
     <string name="result_create_trip_success">建立旅程成功</string>
 
     <string name="error_no_trip_name">要輸入旅程名稱才可以建立喔~</string>
+    <string name="error_no_type">請選擇一個類別</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

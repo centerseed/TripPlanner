@@ -10,12 +10,12 @@ import android.view.View;
 
 abstract public class ContentFragment extends SyncFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     protected Uri mUri;
-    private boolean mFirstLoad = true;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUri = getUri();
+        getActivity().getSupportLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -28,13 +28,7 @@ abstract public class ContentFragment extends SyncFragment implements LoaderMana
     @Override
     public void onResume() {
         super.onResume();
-        if (mFirstLoad) {
-            mFirstLoad = false;
-            getActivity().getSupportLoaderManager().initLoader(0, null, this);
-        } else {
-            reload();
-        }
-
+        reload();
     }
 
     protected void reload() {

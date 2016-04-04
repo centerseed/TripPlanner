@@ -48,7 +48,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 5;
+        private final static int _DBVersion = 6;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
@@ -82,6 +82,17 @@ public class TripProvider extends BaseContentProvider {
                     + FIELD_STROKE_BELONG_DAY + " INTEGER, "
                     + FIELD_STROKE_TIME + " TEXT, "
                     + FIELD_STROKE_ATTRACTION_IDS + " TEXT "
+                    + ");");
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ATTRACTION + " ( "
+                    + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + FIELD_ATTRACTION_NAME + " TEXT, "
+                    + FIELD_ATTRACTION_LAT + " TEXT, "
+                    + FIELD_ATTRACTION_LNG + " TEXT, "
+                    + FIELD_ATTRACTION_SNAPSHOT + " TEXT, "
+                    + FIELD_ATTRACTION_RANK + " TEXT, "
+                    + FIELD_STROKE_TIME + " TEXT, "
+                    + FIELD_ATTRACTION_TYPE + " TEXT "
                     + ");");
         }
 
