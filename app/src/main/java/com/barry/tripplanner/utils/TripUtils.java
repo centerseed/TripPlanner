@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.trip.contentvalues.AttractionContent;
 import com.barry.tripplanner.trip.contentvalues.TripContent;
 
 public class TripUtils {
@@ -37,12 +38,27 @@ public class TripUtils {
         return currentDays;
     }
 
-    public static void addStroke(int day) {
-
+    public static void addStrokeWithAttraction(Context context, int day) {
+        Uri tripUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
     }
 
-    public static void addAttraction() {
+    public static void addAttraction(Context context, int tripId, AttractionContent attraction) {
+        Uri tripUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
+        Uri attractionUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_ATTRACTION);
 
+        context.getContentResolver().insert(attractionUri, attraction.getContentValues());
+
+        Cursor c = context.getContentResolver().query(tripUri, null, TripProvider.FIELD_ID + "=?", new String[]{tripId + ""}, null);
+        if (c != null && c.moveToFirst()) {
+            String attractionIDs = c.getString(c.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS));
+            attractionIDs += "|" + attraction.getContentValues().getAsString(TripProvider.FIELD_ID);
+
+            TripContent tripContent = new TripContent();
+            tripContent.withCursor(c);
+            tripContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_IDS, attractionIDs);
+
+            updateTrip(context, tripContent, null);
+        }
     }
 
     public static class CreateTripTask extends AsyncTask<Void, Void, Void> {
@@ -79,6 +95,7 @@ public class TripUtils {
                 dayValue.put(TripProvider.FIELD_ID, (mValues.getAsString(TripProvider.FIELD_ID) + i).hashCode());
                 dayValue.put(TripProvider.FIELD_DAY_BELONG_TRIP, mValues.getAsInteger(TripProvider.FIELD_ID));
                 dayValue.put(TripProvider.FIELD_SORT_ID, i + "");
+                mContext.getContentResolver().insert(dayUri, dayValue);
             }
 
             mContext.getContentResolver().notifyChange(tripUri, null);

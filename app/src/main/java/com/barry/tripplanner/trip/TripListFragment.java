@@ -103,7 +103,7 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
         TripContent tripContent = new TripContent();
         tripContent.withCursor(cursor);
 
-        intent.putExtra(TripActivity.ARG_TRIP_VALUES, tripContent);
+        intent.putExtra(TripActivity.ARG_TRIP_ID, tripContent.getTripId());
         startActivity(intent);
     }
 

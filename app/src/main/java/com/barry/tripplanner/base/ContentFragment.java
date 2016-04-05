@@ -15,7 +15,7 @@ abstract public class ContentFragment extends SyncFragment implements LoaderMana
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUri = getUri();
-        getActivity().getSupportLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override

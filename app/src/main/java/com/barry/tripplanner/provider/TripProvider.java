@@ -38,7 +38,6 @@ public class TripProvider extends BaseContentProvider {
     public final static String FIELD_ATTRACTION_SNAPSHOT = "_attraction_snapshot";
     public final static String FIELD_ATTRACTION_RANK = "_attraction_rank";
     public final static String FIELD_ATTRACTION_TYPE = "_attraction_type";
-    public final static String FIELD_ATTRACTION_AVAILABLE_TIME = "_attraction_available_time";
 
     @Override
     public boolean onCreate() {

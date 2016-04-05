@@ -1,6 +1,5 @@
 package com.barry.tripplanner.trip;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,20 +8,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.task.UpdateTripTask;
-import com.barry.tripplanner.trip.contentvalues.TripContent;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class EditTripActivity extends CreateTripActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final int REQUEST_EDIT_TRIP = 2000;
-    public static final int RESULT_EDIT_SUCCESS = 200;
     public static final String ARG_TRIP_ID = "trip_id";
-    public static final String ARG_TRIP_RESULT = "trip_result";
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -81,9 +74,6 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
 
     @Override
     public void onTripEditDone(int tripId, String tripName) {
-        Intent result = new Intent();
-        result.putExtra(ARG_TRIP_RESULT, mTripContent.getContentValues());
-        setResult(RESULT_EDIT_SUCCESS, result);
         finish();
     }
 

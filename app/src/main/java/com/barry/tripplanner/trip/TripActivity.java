@@ -34,16 +34,18 @@ import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.contentvalues.TripContent;
 import com.squareup.picasso.Picasso;
 
-public class TripActivity extends ToolbarActivity {
+public class TripActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String ARG_TRIP_VALUES = "trip_values";
+    public static final String ARG_TRIP_ID = "trip_id";
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     private ViewPager mViewPager;
     private TextView mInterval;
     private TextView mDestination;
+    ImageView mImageView;
     Uri mUri;
+    TripContent mTripContent = new TripContent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,6 @@ public class TripActivity extends ToolbarActivity {
         mUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.tab_collapse_toolbar);
-        mCollapsingToolbarLayout.setTitle(getTripName());
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -63,14 +64,10 @@ public class TripActivity extends ToolbarActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mInterval.setText(getInterval());
-        mDestination.setText(getDestination());
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        Picasso.with(this).load(getTripPhotoURL()).into(imageView);
+        mImageView = (ImageView) findViewById(R.id.imageView);
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -84,47 +81,13 @@ public class TripActivity extends ToolbarActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == EditTripActivity.REQUEST_EDIT_TRIP && resultCode == EditTripActivity.RESULT_EDIT_SUCCESS) {
-            ContentValues values = data.getParcelableExtra(EditTripActivity.ARG_TRIP_RESULT);
-
-
-            String interval = values.getAsString(TripProvider.FIELD_TRIP_START_DAY) + " ~ " +
-                    values.getAsString(TripProvider.FIELD_TRIP_END_DAY);
-            mInterval.setText(interval);
-            mDestination.setText(values.getAsString(TripProvider.FIELD_TRIP_DESTINATION));
-            mCollapsingToolbarLayout.setTitle(values.getAsString(TripProvider.FIELD_TRIP_NAME));
-        }
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().initLoader(0, null, this);
     }
 
     private int getTripId() {
-        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return tripContent.getContentValues().getAsInteger(TripProvider.FIELD_ID);
-    }
-
-    private String getTripName() {
-        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return tripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_NAME);
-    }
-
-    private String getTripPhotoURL() {
-        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return tripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_PHOTO);
-    }
-
-    private String getDestination() {
-        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return tripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_DESTINATION);
-    }
-
-    private String getInterval() {
-        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        ContentValues values = tripContent.getContentValues();
-        String interval = values.getAsString(TripProvider.FIELD_TRIP_START_DAY) + " ~ " +
-                values.getAsString(TripProvider.FIELD_TRIP_END_DAY);
-
-        return interval;
+        return getIntent().getIntExtra(ARG_TRIP_ID, 0);
     }
 
     @Override
@@ -139,7 +102,7 @@ public class TripActivity extends ToolbarActivity {
         if (id == R.id.action_edit) {
             Intent intent = new Intent(this, EditTripActivity.class);
             intent.putExtra(EditTripActivity.ARG_TRIP_ID, getTripId());
-            startActivityForResult(intent, EditTripActivity.REQUEST_EDIT_TRIP);
+            startActivity(intent);
             return true;
         }
 
@@ -152,6 +115,31 @@ public class TripActivity extends ToolbarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader cl = new CursorLoader(this);
+        cl.setUri(mUri);
+        cl.setSelection(TripProvider.FIELD_ID + "=?");
+        cl.setSelectionArgs(new String[]{getTripId() + ""});
+        return cl;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            mTripContent.withCursor(cursor);
+            mCollapsingToolbarLayout.setTitle(mTripContent.getName());
+            mInterval.setText(mTripContent.getInterval());
+            mDestination.setText(mTripContent.getDestination());
+            Picasso.with(this).load(mTripContent.getPicPhoto()).into(mImageView);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     public static class PlaceholderFragment extends Fragment {
@@ -199,7 +187,7 @@ public class TripActivity extends ToolbarActivity {
                 Fragment f = new AttractionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(DayListFragment.ARG_TRIP_ID, getTripId());
-                bundle.putString(AttractionFragment.ARG_TRIP_DESTINATION, getDestination());
+                bundle.putString(AttractionFragment.ARG_TRIP_DESTINATION, mTripContent.getDestination());
                 f.setArguments(bundle);
                 return f;
             }

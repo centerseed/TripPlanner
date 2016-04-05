@@ -12,10 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.TripActivity;
+import com.barry.tripplanner.trip.contentvalues.AttractionContent;
+import com.barry.tripplanner.utils.TripUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
@@ -35,12 +38,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String ARG_TRIP_DESTINATION = "trip_destination";
     private GoogleMap mMap;
     Button mAttraction;
-    CharSequence days[];
+    AttractionContent mAttractionContent = new AttractionContent();
+    RadioGroup mGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        mGroup = (RadioGroup) findViewById(R.id.attractionGroup);
 
         mAttraction = (Button) findViewById(R.id.addAttraction);
         mAttraction.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         // Do something with the selection
-
+                        addAttractionInTrip(item);
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -103,6 +109,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, place.getName().toString());
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LAT, place.getLatLng().latitude);
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LNG, place.getLatLng().longitude);
     }
 
     @Override
@@ -117,7 +126,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return getIntent().getStringExtra(ARG_TRIP_DESTINATION);
     }
 
-    private void addAttractionInTrip() {
+    private void addAttractionInTrip(int day) {
+        if (mGroup.getCheckedRadioButtonId() == R.id.typeLandscape)
+            mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_LANDSCAPE);
+        else if (mGroup.getCheckedRadioButtonId() == R.id.typeRestaurant) {
+            mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_RESTAURANT);
+        } else {
+            mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_HOTEL);
+        }
 
+        if (day == 0)
+        TripUtils.addAttraction(this, getTripId(), mAttractionContent);
     }
 }
