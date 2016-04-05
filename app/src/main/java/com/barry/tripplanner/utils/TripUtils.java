@@ -22,7 +22,7 @@ public class TripUtils {
     }
 
     public static void updateTrip(Context context, TripContent tripContent, TripListener tripListener) {
-        new CreateTripTask(context).withContent(tripContent.getContentValues()).withListener(tripListener).execute();
+        new UpdateTripTask(context).withContent(tripContent.getContentValues()).withListener(tripListener).execute();
     }
 
     public static int getDayCountInTrip(Context context, int tripId) {
@@ -91,10 +91,11 @@ public class TripUtils {
         }
     }
 
-    public class UpdateTripTask extends AsyncTask<Void, Void, Void> {
+    public static class UpdateTripTask extends AsyncTask<Void, Void, Void> {
 
         Context mContext;
         ContentValues mValues;
+        TripListener mListener;
 
         public UpdateTripTask(Context context) {
             mContext = context;
@@ -102,6 +103,11 @@ public class TripUtils {
 
         public UpdateTripTask withContent(ContentValues values) {
             mValues = values;
+            return this;
+        }
+
+        public UpdateTripTask withListener(TripListener listener) {
+            mListener = listener;
             return this;
         }
 
@@ -132,6 +138,11 @@ public class TripUtils {
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            if (mListener != null) mListener.onTripEditDone(mValues.getAsInteger(TripProvider.FIELD_ID), mValues.getAsString(TripProvider.FIELD_TRIP_NAME));
         }
     }
 }

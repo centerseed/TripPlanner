@@ -9,11 +9,13 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.task.UpdateTripTask;
 import com.barry.tripplanner.trip.contentvalues.TripContent;
+import com.barry.tripplanner.utils.TripUtils;
 
 public class EditTripActivity extends CreateTripActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -49,17 +51,8 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, mEndTime.getText().toString());
-           // new UpdateTripTask(this).withContent(mTripValue).execute();
 
-            mName.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent result = new Intent();
-                    result.putExtra(ARG_TRIP_RESULT, mTripContent.getContentValues());
-                    setResult(RESULT_EDIT_SUCCESS, result);
-                    finish();
-                }
-            }, 500);
+            TripUtils.updateTrip(this, mTripContent, this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -84,6 +77,14 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
             mStartTime.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)));
             mEndTime.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY)));
         }
+    }
+
+    @Override
+    public void onTripEditDone(int tripId, String tripName) {
+        Intent result = new Intent();
+        result.putExtra(ARG_TRIP_RESULT, mTripContent.getContentValues());
+        setResult(RESULT_EDIT_SUCCESS, result);
+        finish();
     }
 
     @Override
