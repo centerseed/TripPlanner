@@ -13,6 +13,7 @@ import android.view.View;
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.task.UpdateTripTask;
+import com.barry.tripplanner.trip.contentvalues.TripContent;
 
 public class EditTripActivity extends CreateTripActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -44,17 +45,17 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
         }
         if (item.getItemId() == R.id.action_done) {
             // TODO: update trip
-            mTripValue.put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
-            mTripValue.put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
-            mTripValue.put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
-            mTripValue.put(TripProvider.FIELD_TRIP_END_DAY, mEndTime.getText().toString());
-            new UpdateTripTask(this).withContent(mTripValue).execute();
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, mEndTime.getText().toString());
+           // new UpdateTripTask(this).withContent(mTripValue).execute();
 
             mName.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent result = new Intent();
-                    result.putExtra(ARG_TRIP_RESULT, mTripValue);
+                    result.putExtra(ARG_TRIP_RESULT, mTripContent.getContentValues());
                     setResult(RESULT_EDIT_SUCCESS, result);
                     finish();
                 }
@@ -76,13 +77,7 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
-            mTripValue = new ContentValues();
-            mTripValue.put(TripProvider.FIELD_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
-            mTripValue.put(TripProvider.FIELD_TRIP_PHOTO, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO)));
-            mTripValue.put(TripProvider.FIELD_TRIP_NAME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
-            mTripValue.put(TripProvider.FIELD_TRIP_DESTINATION, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_DESTINATION)));
-            mTripValue.put(TripProvider.FIELD_TRIP_START_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)));
-            mTripValue.put(TripProvider.FIELD_TRIP_END_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY)));
+            mTripContent.withCursor(cursor);
 
             mDestination.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_DESTINATION)));
             mName.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));

@@ -2,7 +2,6 @@ package com.barry.tripplanner.trip;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,9 +17,10 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.task.CreateTripTask;
+import com.barry.tripplanner.trip.contentvalues.TripContent;
+import com.barry.tripplanner.utils.TripUtils;
 
-public class TripListFragment extends DragRecycleListFragment implements DragListCallback {
+public class TripListFragment extends DragRecycleListFragment implements DragListCallback, TripUtils.TripListener {
     ContentResolver mResolver;
 
     @Override
@@ -58,38 +58,37 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
     }
 
     private void initDummyData() {
-        ContentValues values;
         mResolver = getContext().getContentResolver();
 
-        values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "東京小旅行".hashCode());
-        values.put(TripProvider.FIELD_TRIP_DESTINATION, "東京");
-        values.put(TripProvider.FIELD_TRIP_NAME, "東京小旅行");
-        values.put(TripProvider.FIELD_TRIP_PHOTO, "http://farm5.static.flickr.com/4060/4650494949_2d3185a48f_o.jpg");
-        values.put(TripProvider.FIELD_SORT_ID, 0);
-        values.put(TripProvider.FIELD_TRIP_START_DAY, "2015-3-10");
-        values.put(TripProvider.FIELD_TRIP_END_DAY, "2015-3-16");
-        new CreateTripTask(getContext()).withContent(values).execute();
+        TripContent tripContent = new TripContent();
+        tripContent.getContentValues().put(TripProvider.FIELD_ID, "東京小旅行".hashCode());
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, "東京");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, "東京小旅行");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, "http://farm5.static.flickr.com/4060/4650494949_2d3185a48f_o.jpg");
+        tripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, 0);
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, "2015-3-10");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, "2015-3-16");
+        TripUtils.addTrip(getContext(), tripContent, this);
 
-        values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "古都跨年行".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "古都跨年行");
-        values.put(TripProvider.FIELD_TRIP_DESTINATION, "京都");
-        values.put(TripProvider.FIELD_TRIP_PHOTO, "http://qglbbs.b0.upaiyun.com/forum/201407/21/155844wjhvzn76tkqugwpq.jpg");
-        values.put(TripProvider.FIELD_SORT_ID, 1);
-        values.put(TripProvider.FIELD_TRIP_START_DAY, "2016-12-29");
-        values.put(TripProvider.FIELD_TRIP_END_DAY, "2017-1-2");
-        new CreateTripTask(getContext()).withContent(values).execute();
+        tripContent = new TripContent();
+        tripContent.getContentValues().put(TripProvider.FIELD_ID, "古都跨年行".hashCode());
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, "古都跨年行");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, "京都");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, "http://qglbbs.b0.upaiyun.com/forum/201407/21/155844wjhvzn76tkqugwpq.jpg");
+        tripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, 1);
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, "2016-12-29");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, "2017-1-2");
+        TripUtils.addTrip(getContext(), tripContent, this);
 
-        values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, "北海道自然探險".hashCode());
-        values.put(TripProvider.FIELD_TRIP_NAME, "北海道自然探險");
-        values.put(TripProvider.FIELD_TRIP_DESTINATION, "北海道");
-        values.put(TripProvider.FIELD_TRIP_PHOTO, "http://www.4p.com.tw/eWeb_spunktour/IMGDB/000453/00002613.jpg");
-        values.put(TripProvider.FIELD_SORT_ID, 2);
-        values.put(TripProvider.FIELD_TRIP_START_DAY, "2015-4-10");
-        values.put(TripProvider.FIELD_TRIP_END_DAY, "2015-4-21");
-        new CreateTripTask(getContext()).withContent(values).execute();
+        tripContent = new TripContent();
+        tripContent.getContentValues().put(TripProvider.FIELD_ID, "北海道自然探險".hashCode());
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, "北海道自然探險");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, "北海道");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, "http://www.4p.com.tw/eWeb_spunktour/IMGDB/000453/00002613.jpg");
+        tripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, 2);
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, "2015-4-10");
+        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, "2015-4-21");
+        TripUtils.addTrip(getContext(), tripContent, this);
     }
 
     @Override
@@ -101,15 +100,15 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
     @Override
     public void onItemClick(Cursor cursor) {
         Intent intent = new Intent(getActivity(), TripActivity.class);
-        ContentValues values = new ContentValues();
-        values.put(TripProvider.FIELD_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
-        values.put(TripProvider.FIELD_TRIP_PHOTO, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO)));
-        values.put(TripProvider.FIELD_TRIP_NAME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
-        values.put(TripProvider.FIELD_TRIP_DESTINATION, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_DESTINATION)));
-        values.put(TripProvider.FIELD_TRIP_START_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)));
-        values.put(TripProvider.FIELD_TRIP_END_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY)));
+        TripContent tripContent = new TripContent();
+        tripContent.withCursor(cursor);
 
-        intent.putExtra(TripActivity.ARG_TRIP_VALUES, values);
+        intent.putExtra(TripActivity.ARG_TRIP_VALUES, tripContent);
         startActivity(intent);
+    }
+
+    @Override
+    public void onTripEditDone(int tripId, String tripName) {
+
     }
 }

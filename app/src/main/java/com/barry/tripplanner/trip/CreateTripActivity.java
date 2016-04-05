@@ -2,7 +2,6 @@ package com.barry.tripplanner.trip;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,8 +23,8 @@ import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.task.CreateTripTask;
-import com.barry.tripplanner.utils.TimeUtils;
+import com.barry.tripplanner.trip.contentvalues.TripContent;
+import com.barry.tripplanner.utils.TripUtils;
 import com.barry.tripplanner.utils.URLBuilder;
 
 import org.jsoup.Connection;
@@ -38,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CreateTripActivity extends AppCompatActivity implements ThumbAdapter.ThumbCallback {
+public class CreateTripActivity extends AppCompatActivity implements ThumbAdapter.ThumbCallback, TripUtils.TripListener {
 
     protected FrameLayout mChoosePhotoLayout;
     protected TextView mDestination;
@@ -53,7 +52,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
     protected EditText mEndTime;
 
     protected int mYear, mMonth, mDay, mHour, mMinute;
-    protected ContentValues mTripValue = new ContentValues();
+    protected TripContent mTripContent = new TripContent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,21 +96,18 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             return true;
         }
         if (item.getItemId() == R.id.action_done) {
-            mTripValue.put(TripProvider.FIELD_ID, mName.getText().hashCode());
-            mTripValue.put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
-            mTripValue.put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
-            mTripValue.put(TripProvider.FIELD_SORT_ID, getLargestTripSort() + 1);
-            mTripValue.put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
-            mTripValue.put(TripProvider.FIELD_TRIP_END_DAY, mEndTime.getText().toString());
-            if (mTripValue.getAsString(TripProvider.FIELD_TRIP_NAME).length() == 0) {
+            mTripContent.getContentValues().put(TripProvider.FIELD_ID, mName.getText().hashCode());
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
+            mTripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, getLargestTripSort() + 1);
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, mEndTime.getText().toString());
+            if (mTripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_NAME).length() == 0) {
                 Toast.makeText(this, R.string.error_no_trip_name, Toast.LENGTH_LONG).show();
                 return true;
             }
 
-            new CreateTripTask(this).withContent(mTripValue).execute();
-            Toast.makeText(this, R.string.result_create_trip_success, Toast.LENGTH_SHORT).show();
-            finish();
-
+            TripUtils.addTrip(this, mTripContent, this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -121,9 +117,15 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
     public void onThumbSelect(String url, boolean isCheck) {
         mAdapter.notifyDataSetChanged();
         if (isCheck)
-            mTripValue.put(TripProvider.FIELD_TRIP_PHOTO, url);
+            mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, url);
         else
-            mTripValue.remove(TripProvider.FIELD_TRIP_PHOTO);
+            mTripContent.getContentValues().remove(TripProvider.FIELD_TRIP_PHOTO);
+    }
+
+    @Override
+    public void onTripEditDone(int tripId, String tripName) {
+        Toast.makeText(this, R.string.result_create_trip_success, Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     class getPhotoListTask extends AsyncTask<Void, Void, Void> {

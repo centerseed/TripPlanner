@@ -16,6 +16,8 @@ import com.barry.tripplanner.provider.TripProvider;
 
 public class AttractionFragment extends RecyclerListFragment {
 
+    public static final String ARG_TRIP_DESTINATION = "trip_destination";
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tab_recycler_fab, container, false);
@@ -29,6 +31,8 @@ public class AttractionFragment extends RecyclerListFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), MapsActivity.class);
+                intent.putExtra(MapsActivity.ARG_TRIP_ID, getTripId());
+                intent.putExtra(MapsActivity.ARG_TRIP_DESTINATION, getDestination());
                 startActivity(intent);
             }
         });
@@ -42,5 +46,12 @@ public class AttractionFragment extends RecyclerListFragment {
     @Override
     protected void onSync() {
 
+    }
+
+    private int getTripId() {
+        return getArguments().getInt(DayListFragment.ARG_TRIP_ID);
+    }
+    private String getDestination() {
+        return getArguments().getString(ARG_TRIP_DESTINATION);
     }
 }

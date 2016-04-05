@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.ToolbarActivity;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.trip.contentvalues.TripContent;
 import com.squareup.picasso.Picasso;
 
 public class TripActivity extends ToolbarActivity {
@@ -98,27 +99,28 @@ public class TripActivity extends ToolbarActivity {
     }
 
     private int getTripId() {
-        ContentValues values = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return values.getAsInteger(TripProvider.FIELD_ID);
+        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
+        return tripContent.getContentValues().getAsInteger(TripProvider.FIELD_ID);
     }
 
     private String getTripName() {
-        ContentValues values = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return values.getAsString(TripProvider.FIELD_TRIP_NAME);
+        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
+        return tripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_NAME);
     }
 
     private String getTripPhotoURL() {
-        ContentValues values = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return values.getAsString(TripProvider.FIELD_TRIP_PHOTO);
+        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
+        return tripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_PHOTO);
     }
 
     private String getDestination() {
-        ContentValues values = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
-        return values.getAsString(TripProvider.FIELD_TRIP_DESTINATION);
+        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
+        return tripContent.getContentValues().getAsString(TripProvider.FIELD_TRIP_DESTINATION);
     }
 
     private String getInterval() {
-        ContentValues values = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
+        TripContent tripContent = getIntent().getParcelableExtra(ARG_TRIP_VALUES);
+        ContentValues values = tripContent.getContentValues();
         String interval = values.getAsString(TripProvider.FIELD_TRIP_START_DAY) + " ~ " +
                 values.getAsString(TripProvider.FIELD_TRIP_END_DAY);
 
@@ -197,6 +199,7 @@ public class TripActivity extends ToolbarActivity {
                 Fragment f = new AttractionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(DayListFragment.ARG_TRIP_ID, getTripId());
+                bundle.putString(AttractionFragment.ARG_TRIP_DESTINATION, getDestination());
                 f.setArguments(bundle);
                 return f;
             }
