@@ -19,6 +19,7 @@ abstract public class RecyclerListFragment extends ContentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        m_adapter = getAdapter();
         return inflater.inflate(R.layout.recycleview, container, false);
     }
 
@@ -41,4 +42,6 @@ abstract public class RecyclerListFragment extends ContentFragment {
     public void onLoaderReset(Loader<Cursor> loader) {
         if (m_adapter != null) m_adapter.swapCursor(null);
     }
+
+    public abstract AbstractRecyclerCursorAdapter getAdapter();
 }

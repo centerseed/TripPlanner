@@ -22,6 +22,7 @@ public class TripContent implements Parcelable {
         mValues.put(TripProvider.FIELD_TRIP_DESTINATION, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_DESTINATION)));
         mValues.put(TripProvider.FIELD_TRIP_START_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)));
         mValues.put(TripProvider.FIELD_TRIP_END_DAY, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY)));
+        mValues.put(TripProvider.FIELD_ATTRACTION_IDS, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS)));
     }
 
     public int getTripId() {
@@ -43,6 +44,10 @@ public class TripContent implements Parcelable {
     public String getInterval() {
         return mValues.getAsString(TripProvider.FIELD_TRIP_START_DAY) + " ~ "
                 + mValues.getAsString(TripProvider.FIELD_TRIP_END_DAY);
+    }
+
+    public String getAttractionIDs() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_IDS);
     }
 
     public TripContent(Parcel in) {

@@ -2,8 +2,6 @@ package com.barry.tripplanner.map;
 
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.location.Location;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -11,16 +9,13 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.TripActivity;
 import com.barry.tripplanner.trip.contentvalues.AttractionContent;
 import com.barry.tripplanner.utils.TripUtils;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -29,7 +24,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener {
@@ -40,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Button mAttraction;
     AttractionContent mAttractionContent = new AttractionContent();
     RadioGroup mGroup;
+    PlaceAutocompleteFragment mAutocompleteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +76,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+        mAutocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.setOnPlaceSelectedListener(this);
-        autocompleteFragment.setHint("輸入景點 例:晴空塔");
+        mAutocompleteFragment.setOnPlaceSelectedListener(this);
+        mAutocompleteFragment.setHint("輸入景點 例:晴空塔");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -109,6 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ID, place.getName().toString().hashCode());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, place.getName().toString());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LAT, place.getLatLng().latitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LNG, place.getLatLng().longitude);

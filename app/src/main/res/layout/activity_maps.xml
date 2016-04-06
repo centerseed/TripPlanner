@@ -14,7 +14,7 @@
 
         <fragment
             android:id="@+id/autocomplete_fragment"
-            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:name="com.barry.tripplanner.trip.PlaceAutoFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

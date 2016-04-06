@@ -188,6 +188,7 @@ public class TripActivity extends ToolbarActivity implements LoaderManager.Loade
                 Bundle bundle = new Bundle();
                 bundle.putInt(DayListFragment.ARG_TRIP_ID, getTripId());
                 bundle.putString(AttractionFragment.ARG_TRIP_DESTINATION, mTripContent.getDestination());
+                bundle.putString(AttractionFragment.ARG_ATTRACTION_IDS, mTripContent.getAttractionIDs());
                 f.setArguments(bundle);
                 return f;
             }
