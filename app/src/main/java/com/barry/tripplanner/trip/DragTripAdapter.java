@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -139,7 +138,8 @@ public class DragTripAdapter
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mCallback != null) mCallback.onItemClick((Cursor) getItem(getAdapterPosition()));
+                    if (mCallback != null)
+                        mCallback.onItemClick((Cursor) getItem(getAdapterPosition()));
                 }
             });
         }

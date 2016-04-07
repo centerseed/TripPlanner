@@ -22,6 +22,7 @@ abstract public class ContentFragment extends SyncFragment implements LoaderMana
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader cl = new CursorLoader(getActivity());
         cl.setUri(mUri);
+        cl.forceLoad();
         return cl;
     }
 

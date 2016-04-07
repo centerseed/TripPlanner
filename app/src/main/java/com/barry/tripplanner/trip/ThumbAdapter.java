@@ -70,7 +70,8 @@ public class ThumbAdapter extends RecyclerView.Adapter {
                         mCheckList.set(i, false);
                     }
                     mCheckList.set(getAdapterPosition(), !isCheck);
-                    if (mPhotoList != null ) mCallback.onThumbSelect(mPhotoList.get(getAdapterPosition()), !isCheck);
+                    if (mPhotoList != null)
+                        mCallback.onThumbSelect(mPhotoList.get(getAdapterPosition()), !isCheck);
                 }
             });
         }

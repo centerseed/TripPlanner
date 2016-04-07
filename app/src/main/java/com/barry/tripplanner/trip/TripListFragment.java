@@ -39,7 +39,6 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
                 startActivity(i);
             }
         });
-        initDummyData();
     }
 
     @Override
@@ -55,40 +54,6 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
     @Override
     protected void onSync() {
 
-    }
-
-    private void initDummyData() {
-        mResolver = getContext().getContentResolver();
-
-        TripContent tripContent = new TripContent();
-        tripContent.getContentValues().put(TripProvider.FIELD_ID, "東京小旅行".hashCode());
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, "東京");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, "東京小旅行");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, "http://farm5.static.flickr.com/4060/4650494949_2d3185a48f_o.jpg");
-        tripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, 0);
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, "2015-3-10");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, "2015-3-16");
-        TripUtils.addTrip(getContext(), tripContent, this);
-
-        tripContent = new TripContent();
-        tripContent.getContentValues().put(TripProvider.FIELD_ID, "古都跨年行".hashCode());
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, "古都跨年行");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, "京都");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, "http://qglbbs.b0.upaiyun.com/forum/201407/21/155844wjhvzn76tkqugwpq.jpg");
-        tripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, 1);
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, "2016-12-29");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, "2017-1-2");
-        TripUtils.addTrip(getContext(), tripContent, this);
-
-        tripContent = new TripContent();
-        tripContent.getContentValues().put(TripProvider.FIELD_ID, "北海道自然探險".hashCode());
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, "北海道自然探險");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, "北海道");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, "http://www.4p.com.tw/eWeb_spunktour/IMGDB/000453/00002613.jpg");
-        tripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, 2);
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, "2015-4-10");
-        tripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, "2015-4-21");
-        TripUtils.addTrip(getContext(), tripContent, this);
     }
 
     @Override

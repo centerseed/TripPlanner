@@ -1,7 +1,6 @@
 package com.barry.tripplanner.trip;
 
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;

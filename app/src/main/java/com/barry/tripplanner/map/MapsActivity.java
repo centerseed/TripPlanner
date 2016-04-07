@@ -104,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        mAttractionContent.getContentValues().put(TripProvider.FIELD_ID, place.getName().toString().hashCode());
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ID, place.getId().hashCode());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, place.getName().toString());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LAT, place.getLatLng().latitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LNG, place.getLatLng().longitude);

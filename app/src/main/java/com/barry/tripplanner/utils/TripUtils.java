@@ -52,6 +52,7 @@ public class TripUtils {
         if (c != null && c.moveToFirst()) {
             String attractionIDs = c.getString(c.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS));
             attractionIDs += "|" + attraction.getContentValues().getAsString(TripProvider.FIELD_ID);
+            attractionIDs = attractionIDs.replace("null|", "");
 
             TripContent tripContent = new TripContent();
             tripContent.withCursor(c);

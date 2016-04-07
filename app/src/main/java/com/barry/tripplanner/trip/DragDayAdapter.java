@@ -135,7 +135,8 @@ public class DragDayAdapter
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mCallback != null) mCallback.onItemClick((Cursor) getItem(getAdapterPosition()));
+                    if (mCallback != null)
+                        mCallback.onItemClick((Cursor) getItem(getAdapterPosition()));
                 }
             });
         }

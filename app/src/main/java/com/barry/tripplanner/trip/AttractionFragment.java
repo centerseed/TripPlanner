@@ -23,9 +23,14 @@ public class AttractionFragment extends RecyclerListFragment {
     public static final String ARG_TRIP_DESTINATION = "trip_destination";
     public static final String ARG_ATTRACTION_IDS = "attraction_ids";
 
+    Uri mTripUri;
+    String mIdsString;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         m_adapter = getAdapter();
+        mTripUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
+
         return inflater.inflate(R.layout.fragment_tab_recycler_fab, container, false);
     }
 
@@ -45,9 +50,34 @@ public class AttractionFragment extends RecyclerListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Cursor cursor = getActivity().getContentResolver().query(mTripUri, null, TripProvider.FIELD_ID + "=?", new String[]{getTripId() + ""}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            mIdsString = cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS));
+            cursor.close();
+            reload();
+        }
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader cl = (CursorLoader) super.onCreateLoader(id, args);
-        String ids = getAttractionIDs();
+        if (mIdsString == null) {
+            cl.setSelection(TripProvider.FIELD_ID + "=0");
+            return cl;
+        }
+
+        String ids[] = mIdsString.split("\\|");
+        String whereclause = "";
+
+        for (int i = 0; i < ids.length; i++) {
+            if (i == 0)
+                whereclause += TripProvider.FIELD_ID + "=" + ids[i];
+            else
+                whereclause += " OR " + TripProvider.FIELD_ID + "=" + ids[i];
+        }
+        cl.setSelection(whereclause);
         return cl;
     }
 
