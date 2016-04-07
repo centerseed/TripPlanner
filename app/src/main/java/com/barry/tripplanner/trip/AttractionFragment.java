@@ -18,7 +18,7 @@ import com.barry.tripplanner.base.RecyclerListFragment;
 import com.barry.tripplanner.map.MapsActivity;
 import com.barry.tripplanner.provider.TripProvider;
 
-public class AttractionFragment extends RecyclerListFragment {
+public class AttractionFragment extends RecyclerListFragment implements AttractionAdapter.AttractionAdapterListener {
 
     public static final String ARG_TRIP_DESTINATION = "trip_destination";
     public static final String ARG_ATTRACTION_IDS = "attraction_ids";
@@ -83,7 +83,7 @@ public class AttractionFragment extends RecyclerListFragment {
 
     @Override
     public AbstractRecyclerCursorAdapter getAdapter() {
-        return new AttractionAdapter(getContext(), null);
+        return new AttractionAdapter(getContext(), null, this);
     }
 
     @Override
@@ -107,5 +107,12 @@ public class AttractionFragment extends RecyclerListFragment {
 
     private String getDestination() {
         return getArguments().getString(ARG_TRIP_DESTINATION);
+    }
+
+    @Override
+    public void onAttractionClick(Cursor cursor) {
+        Intent intent = new Intent(getActivity(), AttractionActivity.class);
+        intent.putExtra(AttractionActivity.ARG_ATTRACTION_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
+        startActivity(intent);
     }
 }

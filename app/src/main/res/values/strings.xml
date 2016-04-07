@@ -28,6 +28,7 @@
     <string name="title_back_time">回程時間</string>
     <string name="title_local_usage">不登入，我想直接使用</string>
     <string name="title_add_attraction">新增景點</string>
+    <string name="title_attraction_name">景點名稱</string>
 
     <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
         您也可以不登入，在本機端編輯您的旅程，日後再登入。

@@ -17,6 +17,7 @@ import com.barry.tripplanner.trip.contentvalues.AttractionContent;
 import com.barry.tripplanner.utils.TripUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;

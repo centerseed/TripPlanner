@@ -13,8 +13,16 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.provider.TripProvider;
 
 public class AttractionAdapter extends AbstractRecyclerCursorAdapter<Cursor> {
-    public AttractionAdapter(Context context, Cursor c) {
+
+    AttractionAdapterListener mListener;
+
+    public interface AttractionAdapterListener {
+        void onAttractionClick(Cursor cursor);
+    }
+
+    public AttractionAdapter(Context context, Cursor c, AttractionAdapterListener listener) {
         super(context, c);
+        mListener = listener;
     }
 
     @Override
@@ -36,6 +44,13 @@ public class AttractionAdapter extends AbstractRecyclerCursorAdapter<Cursor> {
         public AttractionViewHolder(View itemView) {
             super(itemView);
             mName = (TextView) itemView.findViewById(R.id.name);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) mListener.onAttractionClick((Cursor) getItem(getAdapterPosition()));
+                }
+            });
         }
     }
 }
