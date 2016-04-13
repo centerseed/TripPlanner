@@ -3,6 +3,7 @@ package com.barry.tripplanner.map;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -15,9 +16,14 @@ import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.contentvalues.AttractionContent;
 import com.barry.tripplanner.utils.TripUtils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceTypes;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,9 +31,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String ARG_TRIP_ID = "trip_id";
     public static final String ARG_TRIP_DESTINATION = "trip_destination";
@@ -36,11 +43,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     AttractionContent mAttractionContent = new AttractionContent();
     RadioGroup mGroup;
     PlaceAutocompleteFragment mAutocompleteFragment;
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
         mGroup = (RadioGroup) findViewById(R.id.attractionGroup);
 
@@ -85,6 +100,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                // TODO: get place id
+                Places.GeoDataApi.getPlaceById(mGoogleApiClient, "")
+                        .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                            @Override
+                            public void onResult(PlaceBuffer places) {
+                                if (places.getStatus().isSuccess() && places.getCount() > 0) {
+                                    final Place myPlace = places.get(0);
+                                    Log.i("MapsActivity", "Place found: " + myPlace.getName());
+                                } else {
+                                    Log.e("MapsActivity", "Place not found");
+                                }
+                                places.release();
+                            }
+                        });
+            }
+        });
     }
 
     @Override
@@ -134,5 +170,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (day == 0)
         TripUtils.addAttraction(this, getTripId(), mAttractionContent);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    public class getPlaceTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            return null;
+        }
     }
 }
