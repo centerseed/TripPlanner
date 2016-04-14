@@ -46,6 +46,8 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
     public void onMoveItem(int fromPos, int toPos) {
         resetSortIdMap(fromPos, toPos);
         mResolver.notifyChange(mUri, null);
+
+        // TODO: 替換day下的stroke day id
     }
 
     @Override

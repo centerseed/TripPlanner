@@ -100,12 +100,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
 
-                // TODO: get place id
+                /* TODO: get place id
                 Places.GeoDataApi.getPlaceById(mGoogleApiClient, "")
                         .setResultCallback(new ResultCallback<PlaceBuffer>() {
                             @Override
@@ -119,13 +123,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 places.release();
                             }
                         });
+                        */
             }
         });
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
     }
 
     @Override
@@ -168,8 +168,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_HOTEL);
         }
 
-        if (day == 0)
-        TripUtils.addAttraction(this, getTripId(), mAttractionContent);
+        if (day > 0) {
+            mAttractionContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_DAY, --day);
+            TripUtils.addStrokeWithAttraction(this, getTripId(), day, mAttractionContent);
+        } else {
+            TripUtils.addAttraction(this, getTripId(), mAttractionContent);
+        }
     }
 
     @Override

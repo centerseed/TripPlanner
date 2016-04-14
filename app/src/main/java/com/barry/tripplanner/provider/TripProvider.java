@@ -30,7 +30,7 @@ public class TripProvider extends BaseContentProvider {
     public final static String FIELD_STROKE_BELONG_TRIP = "_stroke_belong_trip";
     public final static String FIELD_STROKE_BELONG_DAY = "_stroke_belong_day";
     public final static String FIELD_STROKE_TIME = "_stroke_time";
-    public final static String FIELD_STROKE_ATTRACTION_IDS = "_stroke_attraction_ids";
+    public final static String FIELD_STROKE_ATTRACTION_ID = "_stroke_attraction_ids";
 
     public final static String FIELD_ATTRACTION_NAME = "_attraction_name";
     public final static String FIELD_ATTRACTION_LAT = "_attraction_lat";
@@ -80,7 +80,7 @@ public class TripProvider extends BaseContentProvider {
                     + FIELD_STROKE_BELONG_TRIP + " INTEGER, "
                     + FIELD_STROKE_BELONG_DAY + " INTEGER, "
                     + FIELD_STROKE_TIME + " TEXT, "
-                    + FIELD_STROKE_ATTRACTION_IDS + " TEXT "
+                    + FIELD_STROKE_ATTRACTION_ID + " TEXT "
                     + ");");
 
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ATTRACTION + " ( "

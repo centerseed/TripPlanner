@@ -40,6 +40,7 @@ public class AttractionActivity extends AppCompatActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        getSupportLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -49,8 +50,8 @@ public class AttractionActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        getSupportLoaderManager().initLoader(0, null, this);
         mMap = googleMap;
+        getSupportLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -77,6 +78,8 @@ public class AttractionActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (mMap == null) return;
+
         if (cursor != null && cursor.moveToFirst()) {
             mName.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_NAME)));
             getSupportActionBar().setTitle(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_NAME)));

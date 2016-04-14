@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.Settings;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.contentvalues.AttractionContent;
+import com.barry.tripplanner.trip.contentvalues.StrokeContent;
 import com.barry.tripplanner.trip.contentvalues.TripContent;
 
 public class TripUtils {
@@ -38,8 +40,30 @@ public class TripUtils {
         return currentDays;
     }
 
-    public static void addStrokeWithAttraction(Context context, int day) {
-        Uri tripUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
+    public static void addStrokeWithAttraction(Context context, int tripId, int day, AttractionContent attraction) {
+        addStroke(context, tripId, day);
+        addAttraction(context, tripId, attraction);
+    }
+
+    public static void addStroke(Context context, int tripId, int day) {
+        Uri strokeUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_STROKE);
+        int sortIDinDay = 0;
+        Cursor c = context.getContentResolver().query(strokeUri, null,
+                TripProvider.FIELD_STROKE_BELONG_TRIP + "=? AND " + TripProvider.FIELD_STROKE_BELONG_DAY + "=?",
+                new String[]{tripId + "", day + ""},
+                null);
+        if (c != null) {
+            sortIDinDay = c.getCount();
+            c.close();
+        }
+
+        StrokeContent strokeContent = new StrokeContent(context);
+        strokeContent.getContentValues().put(TripProvider.FIELD_ID, tripId + System.currentTimeMillis());
+        strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_TRIP, tripId);
+        strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_DAY, day);
+        strokeContent.getContentValues().put(TripProvider.FIELD_SORT_ID, sortIDinDay);
+
+        context.getContentResolver().insert(strokeUri, strokeContent.getContentValues());
     }
 
     public static void addAttraction(Context context, int tripId, AttractionContent attraction) {
