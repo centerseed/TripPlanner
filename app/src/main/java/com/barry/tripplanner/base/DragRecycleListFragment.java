@@ -11,6 +11,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +108,9 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
             mSortIDMap.add(new SortPair(c.getInt(c.getColumnIndex(TripProvider.FIELD_ID)), c.getInt(c.getColumnIndex(TripProvider.FIELD_SORT_ID))));
             c.moveToNext();
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Log.d("updateSortIdMap --> ", c.getNotificationUri().toString());
+        }
     }
     protected void resetSortIdMap(int fromPos, int toPos) {
         SortPair currpair = mSortIDMap.get(fromPos);
@@ -118,15 +122,18 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
             mSortIDMap.remove(++fromPos);
         }
 
-        for (int i = 0; i < mSortIDMap.size(); i++)
+        for (int i = 0; i < mSortIDMap.size(); i++) {
+            Log.d("Origin Pair --> ", mSortIDMap.get(i).getId() + " : " + mSortIDMap.get(i).getSortId());
             mSortIDMap.get(i).setSortId(i);
+        }
 
         for (SortPair pair : mSortIDMap) {
             ContentValues values = new ContentValues();
             values.put(TripProvider.FIELD_SORT_ID, pair.getSortId());
 
             int id = pair.getId();
-            getContext().getContentResolver().update(mUri, values, TripProvider.FIELD_ID + "=?", new String[]{id + ""});
+            int result = getContext().getContentResolver().update(mUri, values, TripProvider.FIELD_ID + "=?", new String[]{id + ""});
+            Log.d("Update result", id + " : " + pair.getSortId() + " --> " + result + " uri:" + mUri);
         }
     }
 

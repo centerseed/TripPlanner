@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.barry.tripplanner.provider.TripProvider;
+import com.google.android.gms.maps.model.LatLng;
 
 public class AttractionContent implements Parcelable {
     ContentValues mValues;
@@ -27,6 +28,14 @@ public class AttractionContent implements Parcelable {
 
     public ContentValues getContentValues() {
         return mValues;
+    }
+
+    public String getName() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_NAME);
+    }
+    public LatLng getLatLng() {
+        LatLng latLng = new LatLng(mValues.getAsDouble(TripProvider.FIELD_ATTRACTION_LAT), mValues.getAsDouble(TripProvider.FIELD_ATTRACTION_LNG));
+        return latLng;
     }
 
     /**

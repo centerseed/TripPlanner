@@ -15,11 +15,11 @@ public class StrokeContent implements Parcelable {
     AttractionContent mAttraction;
     ContentValues mValues;
     Context mContext;
-    Uri mUri;
+    Uri mAttrUri;
 
     public StrokeContent(Context context) {
         mValues = new ContentValues();
-        mUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_ATTRACTION);
+        mAttrUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_ATTRACTION);
         mContext = context;
     }
 
@@ -32,7 +32,7 @@ public class StrokeContent implements Parcelable {
         mValues.put(TripProvider.FIELD_STROKE_BELONG_TRIP, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_STROKE_BELONG_TRIP)));
         mValues.put(TripProvider.FIELD_STROKE_TIME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_STROKE_TIME)));
 
-        Cursor cursorAttr = mContext.getContentResolver().query(mUri, null, TripProvider.FIELD_ID + "=?", new String[]{getAttractionID() + ""}, null);
+        Cursor cursorAttr = mContext.getContentResolver().query(mAttrUri, null, TripProvider.FIELD_ID + "=?", new String[]{getAttractionID() + ""}, null);
         if (cursorAttr != null && cursorAttr.moveToFirst()) {
             mAttraction = new AttractionContent();
             mAttraction.withCursor(cursorAttr);

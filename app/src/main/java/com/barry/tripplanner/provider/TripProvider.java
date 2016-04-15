@@ -47,7 +47,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 7;
+        private final static int _DBVersion = 8;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
@@ -99,6 +99,7 @@ public class TripProvider extends BaseContentProvider {
         public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRIP);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DAY);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_STROKE);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_ATTRACTION);
             onCreate(db);
         }

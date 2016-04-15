@@ -19,8 +19,6 @@ import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class TripListFragment extends DragRecycleListFragment implements DragListCallback, TripUtils.TripListener {
-    ContentResolver mResolver;
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recycler_fab, container, false);

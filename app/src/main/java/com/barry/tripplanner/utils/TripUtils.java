@@ -40,11 +40,11 @@ public class TripUtils {
     }
 
     public static void addStrokeWithAttraction(Context context, int tripId, int day, AttractionContent attraction) {
-        addStroke(context, tripId, day);
+        addStroke(context, tripId, attraction.getContentValues().getAsInteger(TripProvider.FIELD_ID), day);
         addAttraction(context, tripId, attraction);
     }
 
-    public static void addStroke(Context context, int tripId, int day) {
+    public static void addStroke(Context context, int tripId, int attrID, int day) {
         Uri strokeUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_STROKE);
         int sortIDinDay = 0;
         Cursor c = context.getContentResolver().query(strokeUri, null,
@@ -60,6 +60,7 @@ public class TripUtils {
         strokeContent.getContentValues().put(TripProvider.FIELD_ID, tripId + System.currentTimeMillis());
         strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_TRIP, tripId);
         strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_DAY, day);
+        strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_ATTRACTION_ID, attrID);
         strokeContent.getContentValues().put(TripProvider.FIELD_SORT_ID, sortIDinDay);
 
         context.getContentResolver().insert(strokeUri, strokeContent.getContentValues());

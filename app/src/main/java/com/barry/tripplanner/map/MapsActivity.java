@@ -166,7 +166,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         if (day > 0) {
-            mAttractionContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_DAY, --day);
             TripUtils.addStrokeWithAttraction(this, getTripId(), day, mAttractionContent);
         } else {
             TripUtils.addAttraction(this, getTripId(), mAttractionContent);

@@ -1,5 +1,6 @@
 package com.barry.tripplanner.base;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +11,13 @@ import android.view.View;
 
 abstract public class ContentFragment extends SyncFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     protected Uri mUri;
+    protected ContentResolver mResolver;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUri = getUri();
+        mResolver = getContext().getContentResolver();
         getLoaderManager().initLoader(0, null, this);
     }
 

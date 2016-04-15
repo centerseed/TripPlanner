@@ -1,6 +1,7 @@
 package com.barry.tripplanner.trip.day;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,15 +13,16 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.trip.stroke.StrokeListFragment;
 
 public class DayListFragment extends DragRecycleListFragment implements DragListCallback {
 
     public static final String ARG_TRIP_ID = "trip_id";
-    ContentResolver mResolver;
+    int mTripId = 0;
 
     @Override
     public void onResume() {
-        mResolver = getContext().getContentResolver();
+        mTripId = getTripId();
         super.onResume();
     }
 
@@ -28,7 +30,7 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader cl = (CursorLoader) super.onCreateLoader(id, args);
         cl.setSelection(TripProvider.FIELD_DAY_BELONG_TRIP + "=?");
-        cl.setSelectionArgs(new String[]{getTripId() + ""});
+        cl.setSelectionArgs(new String[]{mTripId + ""});
         return cl;
     }
 
@@ -52,7 +54,10 @@ public class DayListFragment extends DragRecycleListFragment implements DragList
 
     @Override
     public void onItemClick(Cursor cursor) {
-
+        Intent intent = new Intent(getActivity(), DayActivity.class);
+        intent.putExtra(StrokeListFragment.ARG_TRIP_ID, mTripId);
+        intent.putExtra(StrokeListFragment.ARG_DAY, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_SORT_ID)) + 1);
+        startActivity(intent);
     }
 
     @Override
