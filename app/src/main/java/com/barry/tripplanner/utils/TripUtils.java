@@ -5,13 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.contentvalues.AttractionContent;
-import com.barry.tripplanner.trip.contentvalues.StrokeContent;
-import com.barry.tripplanner.trip.contentvalues.TripContent;
+import com.barry.tripplanner.trip.attraction.AttractionContent;
+import com.barry.tripplanner.trip.stroke.StrokeContent;
+import com.barry.tripplanner.trip.TripContent;
 
 public class TripUtils {
 

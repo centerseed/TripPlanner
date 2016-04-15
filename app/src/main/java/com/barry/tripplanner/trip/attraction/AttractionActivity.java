@@ -1,4 +1,4 @@
-package com.barry.tripplanner.trip;
+package com.barry.tripplanner.trip.attraction;
 
 import android.database.Cursor;
 import android.net.Uri;

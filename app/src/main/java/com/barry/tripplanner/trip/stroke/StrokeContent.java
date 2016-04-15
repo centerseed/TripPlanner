@@ -1,4 +1,4 @@
-package com.barry.tripplanner.trip.contentvalues;
+package com.barry.tripplanner.trip.stroke;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.trip.attraction.AttractionContent;
 
 public class StrokeContent implements Parcelable {
     AttractionContent mAttraction;

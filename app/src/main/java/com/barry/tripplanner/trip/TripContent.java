@@ -1,4 +1,4 @@
-package com.barry.tripplanner.trip.contentvalues;
+package com.barry.tripplanner.trip;
 
 import android.content.ContentValues;
 import android.database.Cursor;

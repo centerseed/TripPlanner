@@ -1,4 +1,4 @@
-package com.barry.tripplanner.trip;
+package com.barry.tripplanner.trip.day;
 
 import android.content.ContentResolver;
 import android.database.Cursor;

@@ -22,9 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.barry.tripplanner.R;
+import com.barry.tripplanner.trip.attraction.AttractionFragment;
 import com.barry.tripplanner.base.ToolbarActivity;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.contentvalues.TripContent;
+import com.barry.tripplanner.trip.day.DayListFragment;
 import com.squareup.picasso.Picasso;
 
 public class TripActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {

@@ -1,7 +1,6 @@
 package com.barry.tripplanner.trip;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,7 +16,6 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.contentvalues.TripContent;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class TripListFragment extends DragRecycleListFragment implements DragListCallback, TripUtils.TripListener {

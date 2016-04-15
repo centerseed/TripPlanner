@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.contentvalues.TripContent;
+import com.barry.tripplanner.trip.TripContent;
 import com.barry.tripplanner.utils.AccountUtils;
 import com.barry.tripplanner.utils.ConfigUtils;
 import com.barry.tripplanner.utils.TripUtils;

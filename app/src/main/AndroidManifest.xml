@@ -44,7 +44,7 @@
             android:label="@string/title_activity_trip"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".trip.CreateTripActivity" />
-        <activity android:name=".trip.DayActivity" />
+        <activity android:name=".trip.day.DayActivity" />
         <activity android:name=".account.AuthenticatorActivity" />
         <activity android:name=".trip.EditTripActivity" />
         <activity
@@ -52,7 +52,7 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".trip.AttractionActivity" />
+        <activity android:name=".trip.attraction.AttractionActivity" />
 
         <service
             android:name=".account.AuthenticatorService"

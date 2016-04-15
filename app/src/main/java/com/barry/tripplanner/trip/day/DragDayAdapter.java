@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.barry.tripplanner.trip;
+package com.barry.tripplanner.trip.day;
 
 import android.content.Context;
 import android.database.Cursor;

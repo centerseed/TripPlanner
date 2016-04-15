@@ -14,15 +14,12 @@ import android.widget.RadioGroup;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.contentvalues.AttractionContent;
+import com.barry.tripplanner.trip.attraction.AttractionContent;
 import com.barry.tripplanner.utils.TripUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlaceTypes;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;

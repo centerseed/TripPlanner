@@ -1,4 +1,4 @@
-package com.barry.tripplanner.trip;
+package com.barry.tripplanner.trip.attraction;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +17,7 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.RecyclerListFragment;
 import com.barry.tripplanner.map.MapsActivity;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.trip.day.DayListFragment;
 
 public class AttractionFragment extends RecyclerListFragment implements AttractionAdapter.AttractionAdapterListener {
 

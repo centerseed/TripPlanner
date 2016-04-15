@@ -2,10 +2,13 @@ package com.barry.tripplanner.base;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+
+import com.barry.tripplanner.R;
 
 import java.util.List;
 
@@ -84,6 +87,14 @@ public abstract class BaseContentProvider extends ContentProvider {
         Uri.Builder ub = new Uri.Builder()
                 .scheme("content")
                 .authority(authority)
+                .appendPath(table);
+        return ub.build();
+    }
+
+    public static Uri getProviderUri(Context context, String table) {
+        Uri.Builder ub = new Uri.Builder()
+                .scheme("content")
+                .authority(context.getResources().getString(R.string.auth_provider_trip))
                 .appendPath(table);
         return ub.build();
     }

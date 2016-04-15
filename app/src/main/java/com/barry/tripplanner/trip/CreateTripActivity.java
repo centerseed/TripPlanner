@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
-import com.barry.tripplanner.trip.contentvalues.TripContent;
 import com.barry.tripplanner.utils.TripUtils;
 import com.barry.tripplanner.utils.URLBuilder;
 
