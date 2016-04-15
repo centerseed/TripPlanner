@@ -1,10 +1,12 @@
 package com.barry.tripplanner.trip.stroke;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;

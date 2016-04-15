@@ -108,9 +108,6 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
             mSortIDMap.add(new SortPair(c.getInt(c.getColumnIndex(TripProvider.FIELD_ID)), c.getInt(c.getColumnIndex(TripProvider.FIELD_SORT_ID))));
             c.moveToNext();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Log.d("updateSortIdMap --> ", c.getNotificationUri().toString());
-        }
     }
     protected void resetSortIdMap(int fromPos, int toPos) {
         SortPair currpair = mSortIDMap.get(fromPos);
@@ -123,7 +120,7 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
         }
 
         for (int i = 0; i < mSortIDMap.size(); i++) {
-            Log.d("Origin Pair --> ", mSortIDMap.get(i).getId() + " : " + mSortIDMap.get(i).getSortId());
+          //  Log.d("Origin Pair --> ", mSortIDMap.get(i).getId() + " : " + mSortIDMap.get(i).getSortId());
             mSortIDMap.get(i).setSortId(i);
         }
 
@@ -133,7 +130,7 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
 
             int id = pair.getId();
             int result = getContext().getContentResolver().update(mUri, values, TripProvider.FIELD_ID + "=?", new String[]{id + ""});
-            Log.d("Update result", id + " : " + pair.getSortId() + " --> " + result + " uri:" + mUri);
+         //   Log.d("Update result", id + " : " + pair.getSortId() + " --> " + result + " uri:" + mUri);
         }
     }
 

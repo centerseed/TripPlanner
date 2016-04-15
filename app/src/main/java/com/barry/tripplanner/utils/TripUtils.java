@@ -57,7 +57,7 @@ public class TripUtils {
         }
 
         StrokeContent strokeContent = new StrokeContent(context);
-        strokeContent.getContentValues().put(TripProvider.FIELD_ID, tripId + System.currentTimeMillis());
+        strokeContent.getContentValues().put(TripProvider.FIELD_ID, (tripId + System.currentTimeMillis() + "").hashCode());
         strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_TRIP, tripId);
         strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_BELONG_DAY, day);
         strokeContent.getContentValues().put(TripProvider.FIELD_STROKE_ATTRACTION_ID, attrID);
