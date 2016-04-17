@@ -9,6 +9,8 @@
     <string name="title_activity_trip">TripActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="navi_my_trip">我的旅程</string>
+
     <string name="action_edit">編輯</string>
     <string name="action_delete">刪除</string>
     <string name="action_done">完成</string>
@@ -29,6 +31,13 @@
     <string name="title_local_usage">不登入，我想直接使用</string>
     <string name="title_add_attraction">新增景點</string>
     <string name="title_attraction_name">景點名稱</string>
+    <string name="title_day_toolbar">第%d天</string>
+    <string name="title_exist_attraction">已存景點</string>
+    <string name="title_ok">確認</string>
+    <string name="title_delete">刪除</string>
+    <string name="title_cancel">取消</string>
+    <string name="title_is_delete_stroke">刪除此行程？</string>
+    <string name="title_is_delete_stroke_detail">刪除行程不會刪除景點資訊</string>
 
     <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
         您也可以不登入，在本機端編輯您的旅程，日後再登入。
@@ -39,4 +48,5 @@
     <string name="error_no_trip_name">要輸入旅程名稱才可以建立喔~</string>
     <string name="error_no_type">請選擇一個類別</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_add_stroke">addStrokeActivity</string>
 </resources>

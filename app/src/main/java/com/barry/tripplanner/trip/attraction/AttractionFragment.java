@@ -1,5 +1,6 @@
 package com.barry.tripplanner.trip.attraction;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.barry.tripplanner.base.RecyclerListFragment;
 import com.barry.tripplanner.map.MapsActivity;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.day.DayListFragment;
+import com.barry.tripplanner.utils.TripUtils;
 
 public class AttractionFragment extends RecyclerListFragment implements AttractionAdapter.AttractionAdapterListener {
 
@@ -115,5 +118,36 @@ public class AttractionFragment extends RecyclerListFragment implements Attracti
         Intent intent = new Intent(getActivity(), AttractionActivity.class);
         intent.putExtra(AttractionActivity.ARG_ATTRACTION_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
         startActivity(intent);
+    }
+
+    @Override
+    public void onAttractionLongClick(final Cursor cursor) {
+        int currentDays = 0;
+        Uri dayUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
+        Cursor c = getContext().getContentResolver().query(dayUri, null, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{getTripId() + ""}, null);
+        if (c != null && c.moveToFirst()){
+            currentDays = c.getCount();
+            c.close();
+        }
+
+        final CharSequence[] items = new CharSequence[currentDays + 1];
+        for (int i = 1; i <= currentDays; i++){
+            String day = "第" + i + "天";
+            items[i] = day;
+        }
+        items[0] = "先不選擇日期";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Make your selection");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                TripUtils.addStroke(getContext(), getTripId(), cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)), item - 1);
+                TripUtils.updateDaySnippet(getContext(), getTripId(), item - 1);
+                Uri dayUri = TripProvider.getProviderUri(getContext().getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
+                getContext().getContentResolver().notifyChange(dayUri, null);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

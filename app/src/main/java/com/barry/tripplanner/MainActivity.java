@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         replaceFragment(new TripListFragment());
-
     }
 
 
@@ -105,18 +104,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         Fragment f = null;
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_my_trip) {
             f = new TripListFragment();
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
         replaceFragment(f);
 

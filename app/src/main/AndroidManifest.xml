@@ -88,7 +88,11 @@
 
         <activity
             android:name=".map.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".trip.stroke.AddStrokeActivity"
+            android:label="@string/title_activity_add_stroke"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

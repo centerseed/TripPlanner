@@ -142,6 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, place.getName().toString());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LAT, place.getLatLng().latitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LNG, place.getLatLng().longitude);
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, place.getPlaceTypes().get(0));
     }
 
     @Override
@@ -157,14 +158,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void addAttractionInTrip(int day) {
-        if (mGroup.getCheckedRadioButtonId() == R.id.typeLandscape)
-            mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_LANDSCAPE);
-        else if (mGroup.getCheckedRadioButtonId() == R.id.typeRestaurant) {
-            mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_RESTAURANT);
-        } else {
-            mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, TripProvider.TYPE_ATTARCTION_HOTEL);
-        }
-
         if (day > 0) {
             TripUtils.addStrokeWithAttraction(this, getTripId(), day - 1, mAttractionContent);
         } else {

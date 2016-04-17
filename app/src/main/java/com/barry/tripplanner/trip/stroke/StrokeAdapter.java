@@ -29,6 +29,8 @@ public class StrokeAdapter extends AbstractRecyclerCursorAdapter<StrokeAdapter.M
 
     public interface StrokeListCallback extends DragListCallback {
         void onEditTime(String time);
+
+        void onLongClick(Cursor cursor);
     }
 
     public StrokeAdapter(Context context, Cursor c, StrokeListCallback callback) {
@@ -100,6 +102,22 @@ public class StrokeAdapter extends AbstractRecyclerCursorAdapter<StrokeAdapter.M
                 public void onClick(View v) {
                     if (mCallback != null)
                         mCallback.onEditTime(((TextView) v).getText().toString());
+                }
+            });
+
+            mContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (mCallback != null)
+                        mCallback.onLongClick((Cursor) getItem(getAdapterPosition()));
+                    return false;
+                }
+            });
+
+            mContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
                 }
             });
         }

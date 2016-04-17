@@ -147,7 +147,24 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             try {
                 Connection.Response response = Jsoup.connect(url).userAgent("Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36").timeout(3000).execute();
                 Document doc = response.parse();
-                Elements notice = doc.select("[href]");
+                String data = doc.toString();
+                int startPoint = 0;
+
+                while (startPoint >= 0 && data.indexOf("\"ou\":\"http", startPoint) > 0) {
+                    startPoint = data.indexOf("\"ou\":\"http", startPoint);
+                    int endPoint = data.indexOf("\"ow\"", startPoint);
+
+                    String photoUrl = data.substring(startPoint + 6, endPoint - 2);
+                    if (!photoUrl.contains("jpg") || photoUrl.contains("%")) {
+                        startPoint = endPoint;
+                        continue;
+                    }
+                    mPhotos.add(photoUrl);
+                    Log.d(CreateTripActivity.class.getName(), photoUrl);
+
+                    startPoint = endPoint;
+                }
+               /* Elements notice = doc.select("[\"ou\"]");
                 int count = 0;
                 for (Element element : notice) {
                     String eleString = element.toString();
@@ -161,7 +178,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
                     mPhotos.add(photoUrl);
                     Log.d(CreateTripActivity.class.getName(), photoUrl);
                     count++;
-                }
+                } */
             } catch (IOException e) {
                 e.printStackTrace();
             }

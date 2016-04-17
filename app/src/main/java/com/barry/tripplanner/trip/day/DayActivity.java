@@ -18,10 +18,11 @@ public class DayActivity extends AppCompatActivity {
 
         StrokeListFragment fragment = new StrokeListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(StrokeListFragment.ARG_TRIP_ID, getIntent().getIntExtra(StrokeListFragment.ARG_TRIP_ID, 0) + "");
-        bundle.putString(StrokeListFragment.ARG_DAY, getIntent().getIntExtra(StrokeListFragment.ARG_DAY, 0) + "");
+        bundle.putInt(StrokeListFragment.ARG_TRIP_ID, getIntent().getIntExtra(StrokeListFragment.ARG_TRIP_ID, 0));
+        bundle.putInt(StrokeListFragment.ARG_DAY, getIntent().getIntExtra(StrokeListFragment.ARG_DAY, 0));
         fragment.setArguments(bundle);
 
+        getSupportActionBar().setTitle(String.format(getResources().getString(R.string.title_day_toolbar), getIntent().getIntExtra(StrokeListFragment.ARG_DAY, 0) + 1));
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, null).commit();
     }
 

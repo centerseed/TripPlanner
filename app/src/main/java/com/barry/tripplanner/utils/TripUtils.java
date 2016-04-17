@@ -42,6 +42,32 @@ public class TripUtils {
     public static void addStrokeWithAttraction(Context context, int tripId, int day, AttractionContent attraction) {
         addStroke(context, tripId, attraction.getContentValues().getAsInteger(TripProvider.FIELD_ID), day);
         addAttraction(context, tripId, attraction);
+
+        updateDaySnippet(context, tripId, day);
+    }
+
+    public static void updateDaySnippet(Context context, int tripId, int day) {
+        Uri strokeUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_STROKE);
+        Cursor c = context.getContentResolver().query(strokeUri, null,
+                TripProvider.FIELD_STROKE_BELONG_TRIP + "=? AND " + TripProvider.FIELD_STROKE_BELONG_DAY + "=?",
+                new String[]{tripId + "", day + ""},
+                TripProvider.FIELD_SORT_ID + " ASC");
+        if (c != null && c.moveToFirst()) {
+            String snippet = "";
+            while (!c.isAfterLast()) {
+                StrokeContent stroke = new StrokeContent(context);
+                stroke.withCursor(c);
+                snippet += stroke.getAtraction().getName() + " ";
+                c.moveToNext();
+            }
+            c.close();
+
+            ContentValues values = new ContentValues();
+            values.put(TripProvider.FIELD_DAY_HIGHLIGHT, snippet);
+            Uri dayUri = TripProvider.getProviderUri(context.getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
+            context.getContentResolver().update(dayUri, values, TripProvider.FIELD_DAY_BELONG_TRIP + "=? AND " +
+            TripProvider.FIELD_SORT_ID + "=?", new String[]{tripId + "", day + ""});
+        }
     }
 
     public static void addStroke(Context context, int tripId, int attrID, int day) {
@@ -64,6 +90,11 @@ public class TripUtils {
         strokeContent.getContentValues().put(TripProvider.FIELD_SORT_ID, sortIDinDay);
 
         context.getContentResolver().insert(strokeUri, strokeContent.getContentValues());
+    }
+
+    public static void deleteStroke(Context context, int strokeId) {
+        Uri strokeUri = TripProvider.getProviderUri(context, TripProvider.TABLE_STROKE);
+        context.getContentResolver().delete(strokeUri, TripProvider.FIELD_ID + "=?", new String[]{strokeId + ""});
     }
 
     public static void addAttraction(Context context, int tripId, AttractionContent attraction) {
