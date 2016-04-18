@@ -3,18 +3,22 @@ package com.barry.tripplanner.trip.stroke;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.utils.AttractionUtils;
 import com.barry.tripplanner.utils.ViewUtils;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
@@ -28,7 +32,7 @@ public class StrokeAdapter extends AbstractRecyclerCursorAdapter<StrokeAdapter.M
     Context mContext;
 
     public interface StrokeListCallback extends DragListCallback {
-        void onEditTime(String time);
+        void onEditTime(Cursor cursor, String time);
 
         void onLongClick(Cursor cursor);
     }
@@ -47,7 +51,10 @@ public class StrokeAdapter extends AbstractRecyclerCursorAdapter<StrokeAdapter.M
         stroke.withCursor(cursor);
 
         vh.mStroke.setText(stroke.getAtraction().getName());
-        Log.d(TAG, "ID --> " + cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)) + " SORT_ID --> " + cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_SORT_ID)));
+        vh.mTime.setText(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_STROKE_TIME)));
+
+        if (AttractionUtils.getAttractionTypeIconRes(stroke.getAtraction().getContentValues().getAsInteger(TripProvider.FIELD_ATTRACTION_TYPE)) != 0)
+            vh.mType.setImageResource(AttractionUtils.getAttractionTypeIconRes(stroke.getAtraction().getContentValues().getAsInteger(TripProvider.FIELD_ATTRACTION_TYPE)));
     }
 
     @Override
@@ -89,19 +96,22 @@ public class StrokeAdapter extends AbstractRecyclerCursorAdapter<StrokeAdapter.M
         public View mDragHandle;
         public TextView mStroke;
         public TextView mTime;
+        public ImageView mType;
 
         public MyViewHolder(View v) {
             super(v);
             mContainer = (FrameLayout) v.findViewById(R.id.container);
             mDragHandle = v.findViewById(R.id.drag_handle);
+            LinearLayout timeSection = (LinearLayout) v.findViewById(R.id.timeSection);
             mStroke = (TextView) v.findViewById(R.id.stroke);
             mTime = (TextView) v.findViewById(R.id.time);
+            mType = (ImageView) v.findViewById(R.id.type);
 
-            mTime.setOnClickListener(new View.OnClickListener() {
+            timeSection.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mCallback != null)
-                        mCallback.onEditTime(((TextView) v).getText().toString());
+                        mCallback.onEditTime((Cursor) getItem(getAdapterPosition()), mTime.getText().toString());
                 }
             });
 

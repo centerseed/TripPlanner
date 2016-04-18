@@ -38,6 +38,7 @@
     <string name="title_cancel">取消</string>
     <string name="title_is_delete_stroke">刪除此行程？</string>
     <string name="title_is_delete_stroke_detail">刪除行程不會刪除景點資訊</string>
+    <string name="title_stroke_time">行程時間</string>
 
     <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
         您也可以不登入，在本機端編輯您的旅程，日後再登入。

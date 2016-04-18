@@ -19,6 +19,7 @@ import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.utils.StrokeUtils;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class StrokeListFragment extends DragRecycleListFragment implements StrokeAdapter.StrokeListCallback {
@@ -92,8 +93,20 @@ public class StrokeListFragment extends DragRecycleListFragment implements Strok
     }
 
     @Override
-    public void onEditTime(String time) {
-        Toast.makeText(getContext(), "Modify time", Toast.LENGTH_LONG).show();
+    public void onEditTime(final Cursor cursor, String time) {
+        final CharSequence[] items = new CharSequence[] {"15 min", "30 mim", "1 hour", "2 hour", "4 hour", "8 hour", "12 hour"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getContext().getResources().getString(R.string.title_stroke_time));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+
+                int id = cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID));
+                StrokeUtils.updateStrokeTime(getContext(), id, items[item].toString());
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
