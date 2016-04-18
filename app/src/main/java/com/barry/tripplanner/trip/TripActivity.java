@@ -26,6 +26,8 @@ import com.barry.tripplanner.trip.attraction.AttractionFragment;
 import com.barry.tripplanner.base.ToolbarActivity;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.day.DayListFragment;
+import com.barry.tripplanner.utils.TimeUtils;
+import com.barry.tripplanner.utils.TripUtils;
 import com.squareup.picasso.Picasso;
 
 public class TripActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -128,6 +130,13 @@ public class TripActivity extends ToolbarActivity implements LoaderManager.Loade
             mInterval.setText(mTripContent.getInterval());
             mDestination.setText(mTripContent.getDestination());
             Picasso.with(this).load(mTripContent.getPicPhoto()).into(mImageView);
+
+            int days = TimeUtils.daysBetween(cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_START_DAY)), cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_END_DAY)));
+            for (int i = 0; i < days; i++) {
+                TripUtils.updateDaySnippet(this, getTripId(), i);
+            }
+            Uri dayUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
+            getContentResolver().notifyChange(dayUri, null);
         }
     }
 

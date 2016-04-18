@@ -71,7 +71,7 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
         } else {
             mRecyclerView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) ContextCompat.getDrawable(getContext(), R.drawable.material_shadow_z1)));
         }
-        mRecyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(getContext(), R.drawable.list_divider_h), true));
+        //mRecyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(getContext(), R.drawable.list_divider_h), true));
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
     }
 
@@ -89,6 +89,8 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
         if (cursor != null && cursor.moveToFirst()) {
             mAdapter.swapCursor(cursor);
             updateSortIdMap(cursor);
+        } else {
+            mAdapter.swapCursor(null);
         }
     }
 

@@ -23,7 +23,7 @@ public class AttractionContent implements Parcelable {
         mValues.put(TripProvider.FIELD_ATTRACTION_LNG, cursor.getDouble(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_LNG)));
         mValues.put(TripProvider.FIELD_ATTRACTION_SNAPSHOT, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_SNAPSHOT)));
         mValues.put(TripProvider.FIELD_ATTRACTION_RANK, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_RANK)));
-        mValues.put(TripProvider.FIELD_ATTRACTION_TYPE, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_TYPE)));
+        mValues.put(TripProvider.FIELD_ATTRACTION_TYPE, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_TYPE)));
     }
 
     public ContentValues getContentValues() {

@@ -1,6 +1,5 @@
 package com.barry.tripplanner.trip.stroke;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,19 +10,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.barry.tripplanner.MainActivity;
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
-import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
-import com.barry.tripplanner.map.MapsActivity;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.utils.StrokeUtils;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class StrokeListFragment extends DragRecycleListFragment implements StrokeAdapter.StrokeListCallback {
@@ -97,8 +93,20 @@ public class StrokeListFragment extends DragRecycleListFragment implements Strok
     }
 
     @Override
-    public void onEditTime(String time) {
-        Toast.makeText(getContext(), "Modify time", Toast.LENGTH_LONG).show();
+    public void onEditTime(final Cursor cursor, String time) {
+        final CharSequence[] items = new CharSequence[] {"15 min", "30 mim", "1 hour", "2 hour", "4 hour", "8 hour", "12 hour"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getContext().getResources().getString(R.string.title_stroke_time));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+
+                int id = cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID));
+                StrokeUtils.updateStrokeTime(getContext(), id, items[item].toString());
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -111,10 +119,7 @@ public class StrokeListFragment extends DragRecycleListFragment implements Strok
                     public void onClick(DialogInterface dialog, int which) {
                         // Toast.makeText(getContext(), R.string.gogo, Toast.LENGTH_SHORT).show();
                         TripUtils.deleteStroke(getContext(), cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
-                        TripUtils.updateDaySnippet(getContext(), getTripId(), getDay());
-
-                        mResolver.notifyChange(mUri, null);
-                        TripUtils.updateDaySnippet(getContext(), getTripId(), getDay());
+                       // mResolver.notifyChange(mUri, null);
                     }
                 })
                 .setNegativeButton(R.string.title_cancel, new DialogInterface.OnClickListener() {
