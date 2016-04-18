@@ -1,6 +1,5 @@
 package com.barry.tripplanner.trip.stroke;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,18 +10,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.barry.tripplanner.MainActivity;
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
-import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
-import com.barry.tripplanner.map.MapsActivity;
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.utils.TripUtils;
 
