@@ -31,6 +31,7 @@
     <string name="title_local_usage">不登入，我想直接使用</string>
     <string name="title_add_attraction">新增景點</string>
     <string name="title_attraction_name">景點名稱</string>
+    <string name="title_attraction_hint">Google map搜尋的景點名稱不一定符合您的期待，您可以自行設定景點名稱</string>
     <string name="title_day_toolbar">第%d天</string>
     <string name="title_exist_attraction">已存景點</string>
     <string name="title_ok">確認</string>
@@ -38,6 +39,7 @@
     <string name="title_cancel">取消</string>
     <string name="title_is_delete_stroke">刪除此行程？</string>
     <string name="title_is_delete_stroke_detail">刪除行程不會刪除景點資訊</string>
+    <string name="title_edit_attraction">編輯景點名稱</string>
 
     <string name="hint_login">建議登入帳號，您可以線上保存您的旅程，以及分享您的旅程 \n
         您也可以不登入，在本機端編輯您的旅程，日後再登入。

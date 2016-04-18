@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import com.barry.tripplanner.R;
@@ -36,9 +37,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String ARG_TRIP_ID = "trip_id";
     public static final String ARG_TRIP_DESTINATION = "trip_destination";
     private GoogleMap mMap;
+    EditText mName;
     Button mAttraction;
     AttractionContent mAttractionContent = new AttractionContent();
-    RadioGroup mGroup;
     PlaceAutocompleteFragment mAutocompleteFragment;
     GoogleApiClient mGoogleApiClient;
 
@@ -53,8 +54,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-        mGroup = (RadioGroup) findViewById(R.id.attractionGroup);
 
         mAttraction = (Button) findViewById(R.id.addAttraction);
         mAttraction.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +92,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         mAutocompleteFragment.setOnPlaceSelectedListener(this);
         mAutocompleteFragment.setHint("輸入景點 例:晴空塔");
+
+        mName = (EditText) findViewById(R.id.etName);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -137,9 +138,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .zoom(12)
                         .build();
 
+        mName.setText(place.getName().toString());
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ID, place.getId().hashCode());
-        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, place.getName().toString());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LAT, place.getLatLng().latitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LNG, place.getLatLng().longitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, place.getPlaceTypes().get(0));
@@ -158,6 +159,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void addAttractionInTrip(int day) {
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, mName.getText().toString());
         if (day > 0) {
             TripUtils.addStrokeWithAttraction(this, getTripId(), day - 1, mAttractionContent);
         } else {

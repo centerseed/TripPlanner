@@ -1,17 +1,24 @@
 package com.barry.tripplanner.trip.attraction;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.utils.AttractionUtils;
+import com.barry.tripplanner.utils.TripUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +33,7 @@ public class AttractionActivity extends AppCompatActivity implements OnMapReadyC
     EditText mName;
     Uri mUri;
     private GoogleMap mMap;
+    ImageView mEditName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,14 @@ public class AttractionActivity extends AppCompatActivity implements OnMapReadyC
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         getSupportLoaderManager().initLoader(0, null, this);
+
+        mEditName = (ImageView) findViewById(R.id.editName);
+        mEditName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editName();
+            }
+        });
     }
 
     @Override
@@ -100,5 +116,23 @@ public class AttractionActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    private void editName() {
+        final View item = LayoutInflater.from(AttractionActivity.this).inflate(R.layout.dialog_simple_input, null);
+        final EditText editText = (EditText) item.findViewById(R.id.edittext);
+        editText.setText(mName.getText().toString());
+
+        new AlertDialog.Builder(AttractionActivity.this)
+                .setTitle(R.string.title_edit_attraction)
+                .setView(item)
+                .setPositiveButton(R.string.title_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AttractionUtils.editAttractionName(getApplicationContext(), getAttrationId(), editText.getText().toString());
+                       // TripUtils.updateDaySnippet(getApplicationContext(), AttractionActivity.this.g);
+                    }
+                })
+                .show();
     }
 }

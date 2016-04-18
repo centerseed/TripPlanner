@@ -14,5 +14,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@mipmap/ic_add_white_36dp" />
 </FrameLayout>
