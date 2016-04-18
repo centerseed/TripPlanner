@@ -89,6 +89,8 @@ abstract public class DragRecycleListFragment extends ContentFragment implements
         if (cursor != null && cursor.moveToFirst()) {
             mAdapter.swapCursor(cursor);
             updateSortIdMap(cursor);
+        } else {
+            mAdapter.swapCursor(null);
         }
     }
 

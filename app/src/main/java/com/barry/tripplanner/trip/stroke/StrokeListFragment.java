@@ -119,10 +119,7 @@ public class StrokeListFragment extends DragRecycleListFragment implements Strok
                     public void onClick(DialogInterface dialog, int which) {
                         // Toast.makeText(getContext(), R.string.gogo, Toast.LENGTH_SHORT).show();
                         TripUtils.deleteStroke(getContext(), cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
-                        TripUtils.updateDaySnippet(getContext(), getTripId(), getDay());
-
-                        mResolver.notifyChange(mUri, null);
-                        TripUtils.updateDaySnippet(getContext(), getTripId(), getDay());
+                       // mResolver.notifyChange(mUri, null);
                     }
                 })
                 .setNegativeButton(R.string.title_cancel, new DialogInterface.OnClickListener() {
