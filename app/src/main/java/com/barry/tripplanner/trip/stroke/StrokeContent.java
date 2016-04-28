@@ -52,8 +52,8 @@ public class StrokeContent implements Parcelable {
         return mValues.getAsInteger(TripProvider.FIELD_STROKE_BELONG_DAY);
     }
 
-    public int getTime() {
-        return mValues.getAsInteger(TripProvider.FIELD_STROKE_TIME);
+    public String getTime() {
+        return mValues.getAsString(TripProvider.FIELD_STROKE_TIME);
     }
 
     public AttractionContent getAtraction() {

@@ -1,6 +1,10 @@
 package com.barry.tripplanner.trip;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,14 +26,15 @@ import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.TripSyncAdapter;
+import com.barry.tripplanner.utils.AccountUtils;
+import com.barry.tripplanner.utils.ConfigUtils;
 import com.barry.tripplanner.utils.TripUtils;
 import com.barry.tripplanner.utils.URLBuilder;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,8 +128,22 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
 
     @Override
     public void onTripEditDone(int tripId, String tripName) {
-        Toast.makeText(this, R.string.result_create_trip_success, Toast.LENGTH_SHORT).show();
-        finish();
+        Context context = CreateTripActivity.this;
+        if (ConfigUtils.getLocalUsageOnly(context)) {
+            Toast.makeText(this, R.string.result_create_trip_success, Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            // TODO: create trip
+            Account account = AccountUtils.getCurrentAccount(context);
+            String userID = AccountManager.get(context).getPassword(account);
+            Bundle args = new Bundle();
+            args.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            args.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            args.putString(TripSyncAdapter.ARG_USER_ID, userID);
+            args.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_ALL_TRIP);
+            context.getContentResolver().requestSync(AccountUtils.getCurrentAccount(context), context.getString(R.string.auth_provider_trip), args);
+            finish();
+        }
     }
 
     class getPhotoListTask extends AsyncTask<Void, Void, Void> {

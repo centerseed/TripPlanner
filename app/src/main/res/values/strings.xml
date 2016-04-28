@@ -46,6 +46,8 @@
         您也可以不登入，在本機端編輯您的旅程，日後再登入。
     </string>
 
+    <string name="action_syncing">同步中...</string>
+
     <string name="result_create_trip_success">建立旅程成功</string>
 
     <string name="error_no_trip_name">要輸入旅程名稱才可以建立喔~</string>

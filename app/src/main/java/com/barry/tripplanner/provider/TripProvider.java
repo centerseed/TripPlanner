@@ -55,7 +55,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 9;
+        private final static int _DBVersion = 10;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
