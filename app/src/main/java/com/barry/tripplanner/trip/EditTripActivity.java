@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.SyncTool;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class EditTripActivity extends CreateTripActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -39,6 +40,7 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
         }
         if (item.getItemId() == R.id.action_done) {
             // TODO: update trip
+            mTripContent.getContentValues().put(TripProvider.FIELD_SYNC, TripProvider.SYNC_UPDATE_TRIP);
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, mStartTime.getText().toString());
@@ -72,7 +74,8 @@ public class EditTripActivity extends CreateTripActivity implements LoaderManage
     }
 
     @Override
-    public void onTripEditDone(int tripId, String tripName) {
+    public void onTripEditDone(String tripId, String tripName) {
+        new SyncTool().with(this).syncTrip(tripId);
         finish();
     }
 

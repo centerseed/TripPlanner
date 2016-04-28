@@ -18,6 +18,7 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.SyncTool;
 import com.barry.tripplanner.sync.TripSyncAdapter;
 import com.barry.tripplanner.utils.AccountUtils;
 import com.barry.tripplanner.utils.TripUtils;
@@ -66,14 +67,7 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
 
     @Override
     protected void onSync() {
-        Account account = AccountUtils.getCurrentAccount(getContext());
-        String userID = AccountManager.get(getContext()).getPassword(account);
-        Bundle args = new Bundle();
-        args.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        args.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        args.putString(TripSyncAdapter.ARG_USER_ID, userID);
-        args.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_ALL_TRIP);
-        getActivity().getContentResolver().requestSync(AccountUtils.getCurrentAccount(getContext()), getContext().getString(R.string.auth_provider_trip), args);
+        new SyncTool().with(getContext()).syncAllTrip();
     }
 
     @Override
@@ -93,7 +87,7 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
     }
 
     @Override
-    public void onTripEditDone(int tripId, String tripName) {
+    public void onTripEditDone(String tripId, String tripName) {
 
     }
 }

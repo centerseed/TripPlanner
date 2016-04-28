@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.SyncTool;
 import com.barry.tripplanner.sync.TripSyncAdapter;
 import com.barry.tripplanner.utils.AccountUtils;
 import com.barry.tripplanner.utils.ConfigUtils;
@@ -134,14 +135,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             finish();
         } else {
             // TODO: create trip
-            Account account = AccountUtils.getCurrentAccount(context);
-            String userID = AccountManager.get(context).getPassword(account);
-            Bundle args = new Bundle();
-            args.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-            args.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-            args.putString(TripSyncAdapter.ARG_USER_ID, userID);
-            args.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_ALL_TRIP);
-            context.getContentResolver().requestSync(AccountUtils.getCurrentAccount(context), context.getString(R.string.auth_provider_trip), args);
+            new SyncTool().with(context).syncAllTrip();
             finish();
         }
     }

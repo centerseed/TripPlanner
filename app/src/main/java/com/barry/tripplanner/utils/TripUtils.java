@@ -16,7 +16,7 @@ public class TripUtils {
 
     TripListener mTripListener;
     public interface TripListener {
-        void onTripEditDone(int tripId, String tripName);
+        void onTripEditDone(String tripId, String tripName);
     }
 
     public static void addTrip(Context context, TripContent tripContent, TripListener tripListener) {
@@ -161,7 +161,7 @@ public class TripUtils {
 
         @Override
         protected void onPostExecute(Void v) {
-            if (mListener != null) mListener.onTripEditDone(mValues.getAsInteger(TripProvider.FIELD_ID), mValues.getAsString(TripProvider.FIELD_TRIP_NAME));
+            if (mListener != null) mListener.onTripEditDone(mValues.getAsString(TripProvider.FIELD_TRIP_ID), mValues.getAsString(TripProvider.FIELD_TRIP_NAME));
         }
     }
 
@@ -216,7 +216,7 @@ public class TripUtils {
 
         @Override
         protected void onPostExecute(Void v) {
-            if (mListener != null) mListener.onTripEditDone(mValues.getAsInteger(TripProvider.FIELD_ID), mValues.getAsString(TripProvider.FIELD_TRIP_NAME));
+            if (mListener != null) mListener.onTripEditDone(mValues.getAsString(TripProvider.FIELD_TRIP_ID), mValues.getAsString(TripProvider.FIELD_TRIP_NAME));
         }
     }
 }

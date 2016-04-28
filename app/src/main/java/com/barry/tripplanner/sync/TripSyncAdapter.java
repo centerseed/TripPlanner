@@ -21,11 +21,15 @@ import okhttp3.RequestBody;
 public class TripSyncAdapter extends BaseSyncAdapter {
     public static final String TAG = "TripSyncAdapter";
     Uri mTripUri;
+    Uri mDayUri;
+    Uri mStrokeUri;
     private final OkHttpClient mClient = new OkHttpClient();
 
     public TripSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mTripUri = TripProvider.getProviderUri(context, TripProvider.TABLE_TRIP);
+        mDayUri = TripProvider.getProviderUri(context, TripProvider.TABLE_DAY);
+        mStrokeUri = TripProvider.getProviderUri(context, TripProvider.TABLE_STROKE);
     }
 
     @Override
@@ -39,7 +43,7 @@ public class TripSyncAdapter extends BaseSyncAdapter {
                 }
 
                 if (TripProvider.SYNC_UPDATE_TRIP.equals(sync)) {
-                    String tripID = c.getString(c.getColumnIndex(TripProvider.FIELD_TRIP_ID));
+                    updateTrip(c, mUserID);
                 }
 
                 if (TripProvider.SYNC_DELETE_TRIP.equals(sync)) {
@@ -130,14 +134,25 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         new TripParser(mContext).parse(mClient.newCall(request).execute());
 
         mContext.getContentResolver().delete(mTripUri, TripProvider.FIELD_ID + "=?", new String[]{id + ""});
-
+        mContext.getContentResolver().delete(mDayUri, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{id + ""});
+        mContext.getContentResolver().delete(mStrokeUri, TripProvider.FIELD_STROKE_BELONG_TRIP + "=?", new String[]{id + ""});
 
         // delete local data
         // notify data change
     }
 
-    private void modifyTrip() {
+    private void updateTrip(Cursor c, String userId) throws IOException, BaseResponseParser.AuthFailException {
+        String tripId = c.getString(c.getColumnIndex(TripProvider.FIELD_TRIP_ID));
+        JSONBuilder builder = new JSONBuilder();
+        RequestBody body = builder.createTripJSON(mContext, c).build();
 
+        String url = new URLBuilder(mContext).host(mHost).path("trip", userId, tripId).build().toString();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        new TripParser(mContext).parse(mClient.newCall(request).execute());
     }
 
     private void deleteTrip() {
