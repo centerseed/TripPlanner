@@ -16,6 +16,7 @@ public abstract class BaseContentProvider extends ContentProvider {
 
     private static final String TAG = "BaseContentProvider";
     public final static String FIELD_ID = "_id";
+    public final static String FIELD_SYNC = "_sync";
     public final static String FIELD_SORT_ID = "_sort_id";
 
     protected static SQLiteOpenHelper mDb;

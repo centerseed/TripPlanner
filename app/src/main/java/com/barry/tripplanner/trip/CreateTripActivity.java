@@ -94,6 +94,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
             return true;
         }
         if (item.getItemId() == R.id.action_done) {
+            mTripContent.getContentValues().put(TripProvider.FIELD_SYNC, TripProvider.SYNC_CREATE_TRIP);
             mTripContent.getContentValues().put(TripProvider.FIELD_ID, mName.getText().hashCode());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, mName.getText().toString());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, mDestination.getText().toString());

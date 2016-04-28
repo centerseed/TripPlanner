@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity
         mIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AccountUtils.getCurrentAccount(MainActivity.this) == null) {
+               // if (AccountUtils.getCurrentAccount(MainActivity.this) == null) {
                     Intent intent = new Intent(MainActivity.this, AuthenticatorActivity.class);
                     startActivity(intent);
-                }
+              //  }
             }
         });
 

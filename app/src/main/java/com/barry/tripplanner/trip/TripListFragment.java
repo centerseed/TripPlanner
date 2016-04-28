@@ -1,5 +1,7 @@
 package com.barry.tripplanner.trip;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,6 +18,8 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.DragListCallback;
 import com.barry.tripplanner.base.DragRecycleListFragment;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.TripSyncAdapter;
+import com.barry.tripplanner.utils.AccountUtils;
 import com.barry.tripplanner.utils.TripUtils;
 
 public class TripListFragment extends DragRecycleListFragment implements DragListCallback, TripUtils.TripListener {
@@ -38,6 +42,19 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        registerSyncStatusListener(R.string.auth_provider_trip);
+        onSync();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterSyncStatusListener();
+    }
+
+    @Override
     protected AbstractRecyclerCursorAdapter getAdapter() {
         return new DragTripAdapter(getContext(), null, this);
     }
@@ -49,7 +66,14 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
 
     @Override
     protected void onSync() {
-
+        Account account = AccountUtils.getCurrentAccount(getContext());
+        String userID = AccountManager.get(getContext()).getPassword(account);
+        Bundle args = new Bundle();
+        args.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        args.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        args.putString(TripSyncAdapter.ARG_USER_ID, userID);
+        args.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_ALL_TRIP);
+        getActivity().getContentResolver().requestSync(AccountUtils.getCurrentAccount(getContext()), getContext().getString(R.string.auth_provider_trip), args);
     }
 
     @Override
@@ -64,7 +88,7 @@ public class TripListFragment extends DragRecycleListFragment implements DragLis
         TripContent tripContent = new TripContent();
         tripContent.withCursor(cursor);
 
-        intent.putExtra(TripActivity.ARG_TRIP_ID, tripContent.getTripId());
+        intent.putExtra(TripActivity.ARG_TRIP_ID, tripContent.getLocalId());
         startActivity(intent);
     }
 

@@ -7,6 +7,8 @@ import android.os.Parcelable;
 
 import com.barry.tripplanner.provider.TripProvider;
 
+import org.json.JSONObject;
+
 public class TripContent implements Parcelable {
     ContentValues mValues;
 
@@ -17,6 +19,7 @@ public class TripContent implements Parcelable {
     public void withCursor(Cursor cursor) {
         mValues = new ContentValues();
         mValues.put(TripProvider.FIELD_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
+        mValues.put(TripProvider.FIELD_TRIP_ID, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_ID)));
         mValues.put(TripProvider.FIELD_TRIP_PHOTO, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_PHOTO)));
         mValues.put(TripProvider.FIELD_TRIP_NAME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_NAME)));
         mValues.put(TripProvider.FIELD_TRIP_DESTINATION, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_DESTINATION)));
@@ -25,8 +28,12 @@ public class TripContent implements Parcelable {
         mValues.put(TripProvider.FIELD_ATTRACTION_IDS, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS)));
     }
 
-    public int getTripId() {
+    public int getLocalId() {
         return mValues.getAsInteger(TripProvider.FIELD_ID);
+    }
+
+    public int getTripId() {
+        return mValues.getAsInteger(TripProvider.FIELD_TRIP_ID);
     }
 
     public String getPicPhoto() {
@@ -56,6 +63,12 @@ public class TripContent implements Parcelable {
 
     public ContentValues getContentValues() {
         return mValues;
+    }
+
+    // TODO: for update to server
+    public JSONObject getJSONObj(Parcel in) {
+        mValues = in.readParcelable(ContentValues.class.getClassLoader());
+        return new JSONObject();
     }
 
     public static final Creator<TripContent> CREATOR = new Creator<TripContent>() {

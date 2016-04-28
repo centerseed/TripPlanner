@@ -9,6 +9,7 @@ public class ConfigUtils {
     }
 
     public static boolean getLocalUsageOnly(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("local_only", false);
+        boolean result = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("local_only", false);
+        return result;
     }
 }

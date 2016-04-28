@@ -3,7 +3,6 @@ package com.barry.tripplanner.account;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +10,13 @@ import android.view.View;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.AsyncResponseParser;
 import com.barry.tripplanner.trip.TripContent;
 import com.barry.tripplanner.utils.AccountUtils;
 import com.barry.tripplanner.utils.ConfigUtils;
+import com.barry.tripplanner.utils.JSONBuilder;
 import com.barry.tripplanner.utils.TripUtils;
+import com.barry.tripplanner.utils.URLBuilder;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -23,10 +25,19 @@ import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     static final String TAG = "AuthenticatorActivity";
     CallbackManager callbackManager;
+    private final OkHttpClient mClient = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +55,45 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 Log.d(TAG, "id -> " + Profile.getCurrentProfile().getId());
                 Log.d(TAG, "picture url -> " + Profile.getCurrentProfile().getProfilePictureUri(300, 300));
 
-                // TODO: Login with name, id, picture
-                // TODO: Login succeed
-                Account account = new Account(Profile.getCurrentProfile().getName(), getString(R.string.tripAccountType));
+                RequestBody body = new JSONBuilder().setParameter(
+                        "nickname", Profile.getCurrentProfile().getName(),
+                        "avatar", Profile.getCurrentProfile().getProfilePictureUri(300, 300).toString(),
+                        "userID", Profile.getCurrentProfile().getId()).build();
 
-                AccountManager.get(AuthenticatorActivity.this).addAccountExplicitly(account, Profile.getCurrentProfile().getId(), null);
-                AccountUtils.setAccountPicture(AuthenticatorActivity.this, Profile.getCurrentProfile().getProfilePictureUri(300, 300).toString());
-                finish();
+                String url = new URLBuilder(AuthenticatorActivity.this).host(R.string.host).path("register").toString();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .build();
+
+                mClient.newCall(request).enqueue(new AsyncResponseParser(AuthenticatorActivity.this, new AsyncResponseParser.NetError() {
+
+                    @Override
+                    public void onNetError(IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponseError(int error) {
+
+                    }
+                }) {
+
+                    @Override
+                    protected void parseResponse(final JSONObject obj) throws Exception {
+                        // TODO: Login with name, id, picture
+                        // TODO: Login succeed
+                        Log.d(TAG, "Register -> " + obj.toString());
+                        Log.d(TAG, "Avatar -> " + obj.optString("avatar"));
+
+                        Account account = new Account(Profile.getCurrentProfile().getName(), getString(R.string.tripAccountType));
+
+                        AccountManager.get(AuthenticatorActivity.this).addAccountExplicitly(account, obj.optString("userID"), null);
+                        AccountUtils.setAccountPicture(AuthenticatorActivity.this, obj.optString("avatar"));
+                        ConfigUtils.setLocalUsageOnly(AuthenticatorActivity.this, false);
+                        finish();
+                    }
+                });
             }
 
             @Override
@@ -64,11 +107,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             }
         });
 
-        initDummyData();
+        // initDummyData();
     }
 
     private void initDummyData() {
-        ContentResolver mResolver = getContentResolver();
 
         TripContent tripContent = new TripContent();
         tripContent.getContentValues().put(TripProvider.FIELD_ID, "東京小旅行".hashCode());

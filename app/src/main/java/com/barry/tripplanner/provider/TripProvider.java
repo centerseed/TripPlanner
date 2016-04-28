@@ -8,15 +8,23 @@ import com.barry.tripplanner.base.BaseContentProvider;
 
 public class TripProvider extends BaseContentProvider {
 
-    public final static String TYPE_ATTARCTION_LANDSCAPE = "_attr_landscape";
-    public final static String TYPE_ATTARCTION_RESTAURANT = "_attr_restaurant";
-    public final static String TYPE_ATTARCTION_HOTEL = "_attr_hotel";
+    public final static String SYNC_ALL_TRIP = "_sync_all_trip";
+    public final static String SYNC_TRIP = "sync_trip";
+    public final static String SYNC_CREATE_TRIP = "create_trip";
+    public final static String SYNC_UPDATE_TRIP = "update_trip";
+    public final static String SYNC_DELETE_TRIP = "delete_trip";
+    public final static String SYNC_SYNC_ATTRACTIONS = "sync_attraction";
+    public final static String SYNC_CREATE_ATTRACTIONS = "create_attraction";
+    public final static String SYNC_UPDATE_ATTRACTIONS = "update_attraction";
+    public final static String SYNC_DELETE_ATTRACTIONS = "delete_attraction";
+    public final static String SYNC_DONE = "sync_done";
 
     public final static String TABLE_TRIP = "_trip";
     public final static String TABLE_DAY = "_day";
     public final static String TABLE_STROKE = "_stroke";
     public final static String TABLE_ATTRACTION = "_attraction";
 
+    public final static String FIELD_TRIP_ID = "_trip_id";
     public final static String FIELD_TRIP_NAME = "_trip_name";
     public final static String FIELD_TRIP_DESTINATION = "_trip_destination";
     public final static String FIELD_TRIP_PHOTO = "_trip_photo";
@@ -47,7 +55,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 8;
+        private final static int _DBVersion = 9;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
@@ -58,7 +66,9 @@ public class TripProvider extends BaseContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_TRIP + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + FIELD_SYNC + " TEXT, "
                     + FIELD_SORT_ID + " INTEGER, "
+                    + FIELD_TRIP_ID + " TEXT, "
                     + FIELD_TRIP_NAME + " TEXT, "
                     + FIELD_TRIP_DESTINATION + " TEXT, "
                     + FIELD_TRIP_PHOTO + " TEXT, "
@@ -85,6 +95,7 @@ public class TripProvider extends BaseContentProvider {
 
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ATTRACTION + " ( "
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + FIELD_SYNC + " TEXT, "
                     + FIELD_ATTRACTION_NAME + " TEXT, "
                     + FIELD_ATTRACTION_LAT + " FLOAT, "
                     + FIELD_ATTRACTION_LNG + " FLOAT, "
