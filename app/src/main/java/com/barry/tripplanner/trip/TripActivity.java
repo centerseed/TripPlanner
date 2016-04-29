@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.barry.tripplanner.R;
+import com.barry.tripplanner.sync.SyncTool;
 import com.barry.tripplanner.trip.attraction.AttractionFragment;
 import com.barry.tripplanner.base.ToolbarActivity;
 import com.barry.tripplanner.provider.TripProvider;
@@ -103,9 +104,14 @@ public class TripActivity extends ToolbarActivity implements LoaderManager.Loade
         }
 
         if (id == R.id.action_delete) {
-            Uri uri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
-            getContentResolver().delete(uri, TripProvider.FIELD_ID + "=?", new String[]{getTripId() + ""});
-            getContentResolver().notifyChange(uri, null);
+            mTripContent.getContentValues().put(TripProvider.FIELD_SYNC, TripProvider.SYNC_DELETE_TRIP);
+            TripUtils.updateTrip(this, mTripContent, new TripUtils.TripListener() {
+                @Override
+                public void onTripEditDone(String tripId, String tripName) {
+                    new SyncTool().with(TripActivity.this).syncTrip(tripId);
+                }
+            });
+
             finish();
             return true;
         }

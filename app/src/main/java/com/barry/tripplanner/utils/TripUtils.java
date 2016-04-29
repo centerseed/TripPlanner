@@ -192,7 +192,7 @@ public class TripUtils {
             Uri tripUri = TripProvider.getProviderUri(mContext.getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
             Uri dayUri = TripProvider.getProviderUri(mContext.getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
 
-            mContext.getContentResolver().update(tripUri, mValues, TripProvider.FIELD_ID + "=?", new String[]{mValues.getAsString(TripProvider.FIELD_ID)});
+            int update = mContext.getContentResolver().update(tripUri, mValues, TripProvider.FIELD_ID + "=?", new String[]{mValues.getAsString(TripProvider.FIELD_ID)});
             mContext.getContentResolver().notifyChange(tripUri, null);
 
             int currentDays = getDayCountInTrip(mContext, mValues.getAsInteger(TripProvider.FIELD_ID));

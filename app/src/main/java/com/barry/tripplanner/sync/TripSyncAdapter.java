@@ -47,7 +47,7 @@ public class TripSyncAdapter extends BaseSyncAdapter {
                 }
 
                 if (TripProvider.SYNC_DELETE_TRIP.equals(sync)) {
-                    String tripID = c.getString(c.getColumnIndex(TripProvider.FIELD_TRIP_ID));
+                    deleteTrip(c, mUserID);
                 }
                 c.moveToNext();
             }
@@ -65,20 +65,15 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         }
 
         if (TripProvider.SYNC_TRIP.equals(extras.getString(ACTION_SYNC))) {
-            String tripID = extras.getString(ARG_TRIP_ID);
 
-            Cursor c = mContentResolver.query(mTripUri, null, TripProvider.FIELD_ID + "=?", new String[]{tripID}, null);
-            if (c != null && c.moveToFirst()) {
-                String sync = c.getString(c.getColumnIndex(TripProvider.FIELD_SYNC));
-                syncTrip(mUserID, tripID, sync);
-                c.close();
-            }
         }
 
         if (TripProvider.SYNC_SYNC_ATTRACTIONS.equals(extras.getString(ACTION_SYNC))) {
             String tripID = extras.getString(ARG_TRIP_ID);
             pullAttractions(mUserID, tripID);
         }
+
+        mContentResolver.notifyChange(mTripUri, null);
     }
 
     /*
@@ -96,18 +91,6 @@ public class TripSyncAdapter extends BaseSyncAdapter {
     }
 
     private void syncTrip(String userID, String tripID, String sync) throws IOException, BaseResponseParser.AuthFailException {
-        if (TripProvider.SYNC_CREATE_TRIP.equals(sync)) {
-
-        }
-
-        if (TripProvider.SYNC_UPDATE_TRIP.equals(sync)) {
-
-        }
-
-        if (TripProvider.SYNC_DELETE_TRIP.equals(sync)) {
-
-        }
-
         pullTrip(userID, tripID);
     }
 
@@ -158,8 +141,19 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         mContext.getContentResolver().notifyChange(mTripUri, null);
     }
 
-    private void deleteTrip() {
+    private void deleteTrip(Cursor c, String userId) throws IOException, BaseResponseParser.AuthFailException {
+        String tripId = c.getString(c.getColumnIndex(TripProvider.FIELD_TRIP_ID));
 
+        String url = new URLBuilder(mContext).host(mHost).path("trip", userId, tripId).build().toString();
+        Log.d(TAG, "deleteTrip --> " + url);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
+        mClient.newCall(request).execute();
+
+        mContext.getContentResolver().delete(mTripUri, TripProvider.FIELD_TRIP_ID + "=?", new String[]{tripId + ""});
     }
 
     private void pullAttractions(String userID, String tripID) {
