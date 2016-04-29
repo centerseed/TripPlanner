@@ -61,6 +61,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         "userID", Profile.getCurrentProfile().getId()).build();
 
                 String url = new URLBuilder(AuthenticatorActivity.this).host(R.string.host).path("register").toString();
+                Log.d(TAG, "create User --> " + url);
                 Request request = new Request.Builder()
                         .url(url)
                         .post(body)

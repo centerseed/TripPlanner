@@ -67,7 +67,7 @@ public class TripParser extends BaseResponseParser {
                 mContext.getContentResolver().insert(dayUri, values);
 
                 Uri strokeUri = TripProvider.getProviderUri(mContext, TripProvider.TABLE_STROKE);
-                JSONArray strokeArray = object.getJSONArray("strokes");
+                JSONArray strokeArray = dayObj.getJSONArray("strokes");
                 for (int j = 0; j < strokeArray.length(); j++) {
                     JSONObject strokeObj = dayArray.getJSONObject(i);
                     values = new ContentValues();

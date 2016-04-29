@@ -113,6 +113,7 @@ public class TripSyncAdapter extends BaseSyncAdapter {
 
     private void pullTrip(String userID, String tripID) throws IOException, BaseResponseParser.AuthFailException {
         String url = new URLBuilder(mContext).host(mHost).path("trip", userID, tripID).build().toString();
+        Log.d(TAG, "pullTrip --> " + url);
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -126,6 +127,7 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         RequestBody body = builder.createTripJSON(mContext, c).build();
 
         String url = new URLBuilder(mContext).host(mHost).path("trip", userId).build().toString();
+        Log.d(TAG, "createTrip --> " + url);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -137,8 +139,7 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         mContext.getContentResolver().delete(mDayUri, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{id + ""});
         mContext.getContentResolver().delete(mStrokeUri, TripProvider.FIELD_STROKE_BELONG_TRIP + "=?", new String[]{id + ""});
 
-        // delete local data
-        // notify data change
+        mContext.getContentResolver().notifyChange(mTripUri, null);
     }
 
     private void updateTrip(Cursor c, String userId) throws IOException, BaseResponseParser.AuthFailException {
@@ -147,12 +148,14 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         RequestBody body = builder.createTripJSON(mContext, c).build();
 
         String url = new URLBuilder(mContext).host(mHost).path("trip", userId, tripId).build().toString();
+        Log.d(TAG, "updateTrip --> " + url);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
 
         new TripParser(mContext).parse(mClient.newCall(request).execute());
+        mContext.getContentResolver().notifyChange(mTripUri, null);
     }
 
     private void deleteTrip() {

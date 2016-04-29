@@ -128,7 +128,7 @@ public class CreateTripActivity extends AppCompatActivity implements ThumbAdapte
     }
 
     @Override
-    public void onTripEditDone(int tripId, String tripName) {
+    public void onTripEditDone(String tripId, String tripName) {
         Context context = CreateTripActivity.this;
         if (ConfigUtils.getLocalUsageOnly(context)) {
             Toast.makeText(this, R.string.result_create_trip_success, Toast.LENGTH_SHORT).show();

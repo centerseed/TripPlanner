@@ -15,28 +15,37 @@ public class SyncTool {
     Context mContext;
     Account mAccount;
     String mUserID;
+    boolean syncable = true;
 
     public SyncTool with(Context c) {
         mContext = c;
         mArgs = new Bundle();
         mArgs.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         mArgs.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        mArgs.putString(TripSyncAdapter.ARG_USER_ID, mUserID);
 
         mAccount = AccountUtils.getCurrentAccount(mContext);
+        if (mAccount == null) {
+            syncable = false;
+            return this;
+        }
         mUserID = AccountManager.get(mContext).getPassword(mAccount);
+        mArgs.putString(TripSyncAdapter.ARG_USER_ID, mUserID);
 
         return this;
     }
 
     public void syncTrip(String tripId) {
-        mArgs.putString(TripSyncAdapter.ARG_TRIP_ID, tripId);
-        mArgs.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_TRIP);
-        mContext.getContentResolver().requestSync(AccountUtils.getCurrentAccount(mContext), mContext.getString(R.string.auth_provider_trip), mArgs);
+        if (syncable) {
+            mArgs.putString(TripSyncAdapter.ARG_TRIP_ID, tripId);
+            mArgs.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_TRIP);
+            mContext.getContentResolver().requestSync(AccountUtils.getCurrentAccount(mContext), mContext.getString(R.string.auth_provider_trip), mArgs);
+        }
     }
 
     public void syncAllTrip() {
-        mArgs.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_ALL_TRIP);
-        mContext.getContentResolver().requestSync(AccountUtils.getCurrentAccount(mContext), mContext.getString(R.string.auth_provider_trip), mArgs);
+        if (syncable) {
+            mArgs.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_ALL_TRIP);
+            mContext.getContentResolver().requestSync(AccountUtils.getCurrentAccount(mContext), mContext.getString(R.string.auth_provider_trip), mArgs);
+        }
     }
 }
