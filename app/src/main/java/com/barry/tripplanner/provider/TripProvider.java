@@ -41,6 +41,7 @@ public class TripProvider extends BaseContentProvider {
     public final static String FIELD_STROKE_ATTRACTION_ID = "_stroke_attraction_ids";
 
     public final static String FIELD_ATTRACTION_NAME = "_attraction_name";
+    public final static String FIELD_ATTRACTION_ID = "_attraction_id";
     public final static String FIELD_ATTRACTION_LAT = "_attraction_lat";
     public final static String FIELD_ATTRACTION_LNG = "_attraction_lng";
     public final static String FIELD_ATTRACTION_SNAPSHOT = "_attraction_snapshot";
@@ -55,7 +56,7 @@ public class TripProvider extends BaseContentProvider {
 
     private class TripDatabase extends SQLiteOpenHelper {
 
-        private final static int _DBVersion = 10;
+        private final static int _DBVersion = 11;
         private final static String _DBName = "trip.db";
 
         public TripDatabase(Context context) {
@@ -97,6 +98,7 @@ public class TripProvider extends BaseContentProvider {
                     + FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + FIELD_SYNC + " TEXT, "
                     + FIELD_ATTRACTION_NAME + " TEXT, "
+                    + FIELD_ATTRACTION_ID + " TEXT, "
                     + FIELD_ATTRACTION_LAT + " FLOAT, "
                     + FIELD_ATTRACTION_LNG + " FLOAT, "
                     + FIELD_ATTRACTION_SNAPSHOT + " TEXT, "

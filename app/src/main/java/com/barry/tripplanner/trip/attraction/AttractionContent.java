@@ -18,6 +18,7 @@ public class AttractionContent implements Parcelable {
     public void withCursor(Cursor cursor) {
         mValues = new ContentValues();
         mValues.put(TripProvider.FIELD_ID, cursor.getInt(cursor.getColumnIndex(TripProvider.FIELD_ID)));
+        mValues.put(TripProvider.FIELD_ATTRACTION_ID, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_ID)));
         mValues.put(TripProvider.FIELD_ATTRACTION_NAME, cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_NAME)));
         mValues.put(TripProvider.FIELD_ATTRACTION_LAT, cursor.getDouble(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_LAT)));
         mValues.put(TripProvider.FIELD_ATTRACTION_LNG, cursor.getDouble(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_LNG)));
@@ -33,6 +34,31 @@ public class AttractionContent implements Parcelable {
     public String getName() {
         return mValues.getAsString(TripProvider.FIELD_ATTRACTION_NAME);
     }
+
+    public String getAttrId() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_ID);
+    }
+
+    public String getType() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_TYPE);
+    }
+
+    public String getLat() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_LAT);
+    }
+
+    public String getLng() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_LNG);
+    }
+
+    public String getRank() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_RANK);
+    }
+
+    public String getSnapshot() {
+        return mValues.getAsString(TripProvider.FIELD_ATTRACTION_SNAPSHOT);
+    }
+
     public LatLng getLatLng() {
         LatLng latLng = new LatLng(mValues.getAsDouble(TripProvider.FIELD_ATTRACTION_LAT), mValues.getAsDouble(TripProvider.FIELD_ATTRACTION_LNG));
         return latLng;

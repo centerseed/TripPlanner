@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.barry.tripplanner.provider.TripProvider;
 import com.barry.tripplanner.trip.TripContent;
+import com.barry.tripplanner.trip.attraction.AttractionContent;
 import com.barry.tripplanner.trip.stroke.StrokeContent;
 
 import org.json.JSONArray;
@@ -34,6 +35,24 @@ public class JSONBuilder {
         return this;
     }
 
+    public JSONBuilder createAttractionJSON(Context context, Cursor c) {
+        AttractionContent content = new AttractionContent();
+        content.withCursor(c);
+
+        try {
+            mObject.put("name", content.getName());
+            mObject.put("attrID", content.getAttrId());
+            mObject.put("type", content.getType());
+            mObject.put("lat", content.getLat());
+            mObject.put("lng", content.getLng());
+            mObject.put("snapshot", content.getSnapshot());
+            mObject.put("rank", content.getRank());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
     public JSONBuilder createTripJSON(Context context, Cursor c) {
         TripContent content = new TripContent();
         Uri dayUri = TripProvider.getProviderUri(context, TripProvider.TABLE_DAY);
@@ -48,6 +67,13 @@ public class JSONBuilder {
             mObject.put("startDate", content.getStartDay());
             mObject.put("endDate", content.getEndDay());
 
+        /*    String attrIDs[] = content.getAttractionIDs().split("|");
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < attrIDs.length; i++) {
+                array.put(attrIDs[i]);
+            }
+            mObject.put("attractionIDs", array); */
+
             JSONArray days = new JSONArray();
             Cursor dayCursor = context.getContentResolver().query(dayUri, null, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{content.getLocalId() + ""}, TripProvider.FIELD_SORT_ID + " ASC");
             if (dayCursor != null && dayCursor.moveToFirst()) {
@@ -57,7 +83,7 @@ public class JSONBuilder {
                             null,
                             TripProvider.FIELD_STROKE_BELONG_TRIP + "=? AND " + TripProvider.FIELD_STROKE_BELONG_TRIP + "=?",
                             new String[]{content.getLocalId() + "", dayCursor.getInt(dayCursor.getColumnIndex(TripProvider.FIELD_SORT_ID)) + ""},
-                                    TripProvider.FIELD_SORT_ID + " ASC");
+                            TripProvider.FIELD_SORT_ID + " ASC");
                     if (strokeCursor != null && strokeCursor.moveToFirst()) {
                         while (!strokeCursor.isAfterLast()) {
                             StrokeContent strokeContent = new StrokeContent(context);
@@ -92,7 +118,7 @@ public class JSONBuilder {
     }
 
     public RequestBody build() {
-        return  RequestBody.create(JSON, mObject.toString());
+        return RequestBody.create(JSON, mObject.toString());
     }
     /*
     String json = new JSONBuilder().setParameter(

@@ -48,7 +48,7 @@ public abstract class BaseSyncAdapter extends AbstractThreadedSyncAdapter {
         if (null != extras) {
             mUserID = extras.getString(ARG_USER_ID);
             try {
-                pushLocalData();
+                pushLocalData(extras);
                 performSync(extras);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -59,6 +59,6 @@ public abstract class BaseSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    abstract void pushLocalData() throws IOException, BaseResponseParser.AuthFailException;
+    abstract void pushLocalData(Bundle extras) throws IOException, BaseResponseParser.AuthFailException;
     abstract void performSync(Bundle extras) throws IOException, BaseResponseParser.AuthFailException;
 }

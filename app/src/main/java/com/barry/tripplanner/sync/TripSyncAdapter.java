@@ -23,6 +23,7 @@ public class TripSyncAdapter extends BaseSyncAdapter {
     Uri mTripUri;
     Uri mDayUri;
     Uri mStrokeUri;
+    Uri mAttractionUri;
     private final OkHttpClient mClient = new OkHttpClient();
 
     public TripSyncAdapter(Context context, boolean autoInitialize) {
@@ -30,10 +31,38 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         mTripUri = TripProvider.getProviderUri(context, TripProvider.TABLE_TRIP);
         mDayUri = TripProvider.getProviderUri(context, TripProvider.TABLE_DAY);
         mStrokeUri = TripProvider.getProviderUri(context, TripProvider.TABLE_STROKE);
+        mAttractionUri = TripProvider.getProviderUri(context, TripProvider.TABLE_ATTRACTION);
     }
 
     @Override
-    void pushLocalData() throws IOException, BaseResponseParser.AuthFailException {
+    void pushLocalData(Bundle extras) throws IOException, BaseResponseParser.AuthFailException {
+        pushTripData();
+        pushAttractionData(extras);
+    }
+
+    @Override
+    void performSync(Bundle extras) throws IOException, BaseResponseParser.AuthFailException {
+        if (TextUtils.isEmpty(mUserID)) return;
+
+
+        if (TripProvider.SYNC_ALL_TRIP.equals(extras.getString(ACTION_SYNC))) {
+            syncAllTrip(mUserID);
+        }
+
+        if (TripProvider.SYNC_TRIP.equals(extras.getString(ACTION_SYNC))) {
+
+        }
+
+        if (TripProvider.SYNC_SYNC_ATTRACTIONS.equals(extras.getString(ACTION_SYNC))) {
+            String tripID = extras.getString(ARG_TRIP_ID);
+            pullAttractions(mUserID, tripID);
+            pullTrip(mUserID, tripID);
+        }
+
+        mContentResolver.notifyChange(mTripUri, null);
+    }
+
+    private void pushTripData() throws IOException, BaseResponseParser.AuthFailException {
         Cursor c = mContentResolver.query(mTripUri, null, TripProvider.FIELD_SYNC + "!=?", new String[]{TripProvider.SYNC_DONE}, null);
         if (c != null && c.moveToFirst()) {
             while (!c.isAfterLast()) {
@@ -55,25 +84,25 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         }
     }
 
-    @Override
-    void performSync(Bundle extras) throws IOException, BaseResponseParser.AuthFailException {
-        if (TextUtils.isEmpty(mUserID)) return;
+    private void pushAttractionData(Bundle extra) throws IOException, BaseResponseParser.AuthFailException {
+        String tripId = extra.getString(TripSyncAdapter.ARG_TRIP_ID);
+        Cursor c = mContentResolver.query(mAttractionUri, null, TripProvider.FIELD_SYNC + "!=?", new String[]{TripProvider.SYNC_DONE}, null);
+        if (c != null && c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                String sync = c.getString(c.getColumnIndex(TripProvider.FIELD_SYNC));
+                if (TripProvider.SYNC_CREATE_ATTRACTIONS.equals(sync)) {
+                    createAttraction(c, mUserID, tripId);
+                }
 
+                if (TripProvider.SYNC_UPDATE_ATTRACTIONS.equals(sync)) {
+                }
 
-        if (TripProvider.SYNC_ALL_TRIP.equals(extras.getString(ACTION_SYNC))) {
-            syncAllTrip(mUserID);
+                if (TripProvider.SYNC_DELETE_ATTRACTIONS.equals(sync)) {
+                }
+                c.moveToNext();
+            }
+            c.close();
         }
-
-        if (TripProvider.SYNC_TRIP.equals(extras.getString(ACTION_SYNC))) {
-
-        }
-
-        if (TripProvider.SYNC_SYNC_ATTRACTIONS.equals(extras.getString(ACTION_SYNC))) {
-            String tripID = extras.getString(ARG_TRIP_ID);
-            pullAttractions(mUserID, tripID);
-        }
-
-        mContentResolver.notifyChange(mTripUri, null);
     }
 
     /*
@@ -156,7 +185,30 @@ public class TripSyncAdapter extends BaseSyncAdapter {
         mContext.getContentResolver().delete(mTripUri, TripProvider.FIELD_TRIP_ID + "=?", new String[]{tripId + ""});
     }
 
-    private void pullAttractions(String userID, String tripID) {
+    private void pullAttractions(String userId, String tripId) throws IOException, BaseResponseParser.AuthFailException {
+        String url = new URLBuilder(mContext).host(mHost).path("attraction", userId, tripId).build().toString();
+        Log.d(TAG, "pullAttractions --> " + url);
 
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        new AttractionListParser(mContext).parse(mClient.newCall(request).execute());
+        mContext.getContentResolver().notifyChange(mAttractionUri, null);
+    }
+
+    private void createAttraction(Cursor c, String userId, String tripId) throws IOException {
+        String url = new URLBuilder(mContext).host(mHost).path("attraction", userId, tripId).build().toString();
+        Log.d(TAG, "createAttraction --> " + url);
+
+        JSONBuilder builder = new JSONBuilder();
+        RequestBody body = builder.createAttractionJSON(mContext, c).build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        mClient.newCall(request).execute();
     }
 }

@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 
 import com.barry.tripplanner.R;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.SyncTool;
 import com.barry.tripplanner.trip.attraction.AttractionContent;
 import com.barry.tripplanner.utils.TripUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public static final String ARG_TRIP_ID = "trip_id";
+    public static final String ARG_TRIP_LOCAL_ID = "trip_local_id";
     public static final String ARG_TRIP_DESTINATION = "trip_destination";
     private GoogleMap mMap;
     EditText mName;
@@ -62,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 int currentDays = 0;
                 Uri dayUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
-                Cursor c = getContentResolver().query(dayUri, null, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{getTripId() + ""}, null);
+                Cursor c = getContentResolver().query(dayUri, null, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{getLocalTripId() + ""}, null);
                 if (c != null && c.moveToFirst()){
                     currentDays = c.getCount();
                     c.close();
@@ -79,7 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 builder.setTitle("Make your selection");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        // Do something with the selection
                         addAttractionInTrip(item);
                     }
                 });
@@ -141,6 +142,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mName.setText(place.getName().toString());
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ID, place.getId().hashCode());
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_SYNC, TripProvider.SYNC_CREATE_ATTRACTIONS);
+        mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_ID, place.getId());
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LAT, place.getLatLng().latitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_LNG, place.getLatLng().longitude);
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_TYPE, place.getPlaceTypes().get(0));
@@ -151,8 +154,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private int getTripId() {
-        return getIntent().getIntExtra(ARG_TRIP_ID, 0);
+    private int getLocalTripId() {
+        return getIntent().getIntExtra(ARG_TRIP_LOCAL_ID, 0);
+    }
+    private String getTripId() {
+        return getIntent().getStringExtra(ARG_TRIP_ID);
     }
     private String getTripDestination() {
         return getIntent().getStringExtra(ARG_TRIP_DESTINATION);
@@ -161,10 +167,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addAttractionInTrip(int day) {
         mAttractionContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_NAME, mName.getText().toString());
         if (day > 0) {
-            TripUtils.addStrokeWithAttraction(this, getTripId(), day - 1, mAttractionContent);
+            TripUtils.addStrokeWithAttraction(this, getLocalTripId(), day - 1, mAttractionContent);
         } else {
-            TripUtils.addAttraction(this, getTripId(), mAttractionContent);
+            TripUtils.addAttraction(this, getLocalTripId(), mAttractionContent);
         }
+
+        new SyncTool().with(this).syncAttractions(getTripId());
     }
 
     @Override

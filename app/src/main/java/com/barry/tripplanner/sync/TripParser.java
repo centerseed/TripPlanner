@@ -45,12 +45,20 @@ public class TripParser extends BaseResponseParser {
             TripContent mTripContent = new TripContent();
             mTripContent.getContentValues().put(TripProvider.FIELD_ID, tripID.hashCode());
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_ID, object.optString("_id"));
+            mTripContent.getContentValues().put(TripProvider.FIELD_SYNC, TripProvider.SYNC_DONE);
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_PHOTO, object.optString("avatar"));
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_NAME, object.optString("tripName"));
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_DESTINATION, object.optString("destination"));
             mTripContent.getContentValues().put(TripProvider.FIELD_SORT_ID, object.optString("sortID"));
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_START_DAY, object.optString("startDate"));
             mTripContent.getContentValues().put(TripProvider.FIELD_TRIP_END_DAY, object.optString("endDate"));
+
+            JSONArray array = object.getJSONArray("attractionIDs");
+            String attrIDs = "";
+            for (int i = 0; i < array.length(); i++) {
+                attrIDs += array.getString(i) + "|";
+            }
+            mTripContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_IDS, attrIDs);
 
             Uri tripUri = TripProvider.getProviderUri(mContext, TripProvider.TABLE_TRIP);
             mContext.getContentResolver().insert(tripUri, mTripContent.getContentValues());

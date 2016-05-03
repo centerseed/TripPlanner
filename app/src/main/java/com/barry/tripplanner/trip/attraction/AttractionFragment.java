@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -19,6 +18,7 @@ import com.barry.tripplanner.base.AbstractRecyclerCursorAdapter;
 import com.barry.tripplanner.base.RecyclerListFragment;
 import com.barry.tripplanner.map.MapsActivity;
 import com.barry.tripplanner.provider.TripProvider;
+import com.barry.tripplanner.sync.SyncTool;
 import com.barry.tripplanner.trip.day.DayListFragment;
 import com.barry.tripplanner.utils.TripUtils;
 
@@ -29,9 +29,10 @@ public class AttractionFragment extends RecyclerListFragment implements Attracti
 
     Uri mTripUri;
     String mIdsString;
+    String mTripID;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         m_adapter = getAdapter();
         mTripUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_TRIP);
 
@@ -46,7 +47,8 @@ public class AttractionFragment extends RecyclerListFragment implements Attracti
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), MapsActivity.class);
-                intent.putExtra(MapsActivity.ARG_TRIP_ID, getTripId());
+                intent.putExtra(MapsActivity.ARG_TRIP_LOCAL_ID, getTripId());
+                intent.putExtra(MapsActivity.ARG_TRIP_ID, mTripID);
                 intent.putExtra(MapsActivity.ARG_TRIP_DESTINATION, getDestination());
                 startActivity(intent);
             }
@@ -59,9 +61,13 @@ public class AttractionFragment extends RecyclerListFragment implements Attracti
         Cursor cursor = getActivity().getContentResolver().query(mTripUri, null, TripProvider.FIELD_ID + "=?", new String[]{getTripId() + ""}, null);
         if (cursor != null && cursor.moveToFirst()) {
             mIdsString = cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS));
+            mTripID = cursor.getString(cursor.getColumnIndex(TripProvider.FIELD_TRIP_ID));
             cursor.close();
             reload();
         }
+
+        if (mTripID != null)
+            new SyncTool().with(getContext()).syncAttractions(mTripID);
     }
 
     @Override
@@ -77,11 +83,12 @@ public class AttractionFragment extends RecyclerListFragment implements Attracti
 
         for (int i = 0; i < ids.length; i++) {
             if (i == 0)
-                whereclause += TripProvider.FIELD_ID + "=" + ids[i];
+                whereclause += TripProvider.FIELD_ATTRACTION_ID + "=?";
             else
-                whereclause += " OR " + TripProvider.FIELD_ID + "=" + ids[i];
+                whereclause += " OR " + TripProvider.FIELD_ATTRACTION_ID + "=?";
         }
         cl.setSelection(whereclause);
+        cl.setSelectionArgs(ids);
         return cl;
     }
 
@@ -125,13 +132,13 @@ public class AttractionFragment extends RecyclerListFragment implements Attracti
         int currentDays = 0;
         Uri dayUri = TripProvider.getProviderUri(getString(R.string.auth_provider_trip), TripProvider.TABLE_DAY);
         Cursor c = getContext().getContentResolver().query(dayUri, null, TripProvider.FIELD_DAY_BELONG_TRIP + "=?", new String[]{getTripId() + ""}, null);
-        if (c != null && c.moveToFirst()){
+        if (c != null && c.moveToFirst()) {
             currentDays = c.getCount();
             c.close();
         }
 
         final CharSequence[] items = new CharSequence[currentDays + 1];
-        for (int i = 1; i <= currentDays; i++){
+        for (int i = 1; i <= currentDays; i++) {
             String day = "第" + i + "天";
             items[i] = day;
         }

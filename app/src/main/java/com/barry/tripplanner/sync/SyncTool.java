@@ -48,4 +48,12 @@ public class SyncTool {
             mContext.getContentResolver().requestSync(AccountUtils.getCurrentAccount(mContext), mContext.getString(R.string.auth_provider_trip), mArgs);
         }
     }
+
+    public void syncAttractions(String tripId) {
+        if (syncable) {
+            mArgs.putString(TripSyncAdapter.ARG_TRIP_ID, tripId);
+            mArgs.putString(TripSyncAdapter.ACTION_SYNC, TripProvider.SYNC_SYNC_ATTRACTIONS);
+            mContext.getContentResolver().requestSync(AccountUtils.getCurrentAccount(mContext), mContext.getString(R.string.auth_provider_trip), mArgs);
+        }
+    }
 }

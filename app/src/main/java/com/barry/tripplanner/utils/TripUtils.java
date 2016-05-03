@@ -107,12 +107,13 @@ public class TripUtils {
         Cursor c = context.getContentResolver().query(tripUri, null, TripProvider.FIELD_ID + "=?", new String[]{tripId + ""}, null);
         if (c != null && c.moveToFirst()) {
             String attractionIDs = c.getString(c.getColumnIndex(TripProvider.FIELD_ATTRACTION_IDS));
-            attractionIDs += "|" + attraction.getContentValues().getAsString(TripProvider.FIELD_ID);
+            attractionIDs += "|" + attraction.getContentValues().getAsString(TripProvider.FIELD_ATTRACTION_ID);
             attractionIDs = attractionIDs.replace("null|", "");
 
             TripContent tripContent = new TripContent();
             tripContent.withCursor(c);
             tripContent.getContentValues().put(TripProvider.FIELD_ATTRACTION_IDS, attractionIDs);
+            tripContent.getContentValues().put(TripProvider.FIELD_SYNC, TripProvider.SYNC_UPDATE_TRIP);
 
             updateTrip(context, tripContent, null);
         }
